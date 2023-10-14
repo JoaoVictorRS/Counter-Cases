@@ -3,6 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+//Telas
 import Caixas from './caixas/Caixas';
 import Inventario from './inventario/Inventario';
 import StatsPlayer from './statsPlayer/StatsPlayer';
