@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './telas/Login';
 import principalBottomNav from './telas/telasBottomNav/PrincipalBottomNav';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {

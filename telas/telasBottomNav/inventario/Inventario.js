@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper'
 const Inventario = () => {
   return (
     <>
-        <Text>PAGINA INVENTARIO</Text>
+      
     </>
   )
 }
