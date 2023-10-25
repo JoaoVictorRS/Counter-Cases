@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
-import { Avatar, Card, IconButton, Text } from 'react-native-paper'
+import { Image, ScrollView } from 'react-native'
+import { Text } from 'react-native-paper'
 import CsAPI from '../../../services/CsAPI';
 import { View } from 'react-native';
+import CaixasStyles from './style/CaixasStyle';
 
 const Caixas = ({ navigation }) => {
 
   const [caixas, setCaixas] = useState([]);
 
   useEffect(() => {
-    CsAPI.get('/crates.json').then(resultado => {
+    CsAPI.get('/crates/cases.json').then(resultado => {
       setCaixas(resultado.data)
     })
   }, []);
@@ -18,35 +19,16 @@ const Caixas = ({ navigation }) => {
   return (
     <>
       <ScrollView>
+        <View style={CaixasStyles.container}>
 
-        {caixas.map(item => (
-          
+          {caixas.map(item => (
+            <View key={item.id} style={CaixasStyles.card}>
+              <Image source={item.image} style={CaixasStyles.image} />
+              <Text style={CaixasStyles.name}>{item.name}</Text>
+            </View>
+          ))}
 
-            <Card key={item.id}>
-              <Card.Title
-
-                title={item.name}
-                left={(props) => (
-                  <Avatar.Image
-                    {...props}
-                    size={39}
-                    source={{
-                      uri: `${item.image}`,
-                    }}
-                  />
-
-
-                )}
-                right={(props) => <IconButton {...props} icon="chevron-right" onPress={() => navigation.push()} />}
-
-              />
-
-            </Card>
-        
-
-        ))}
-
-
+        </View>
       </ScrollView >
     </>
   )
