@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native-paper'
 import CsVercelAPI from '../../../services/CsVercelAPI';
-import { Image, ScrollView, View } from 'react-native';
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import ItensCaixaStyle from './style/ItensCaixaStyle';
 
 const ItensCaixa = ({ navigation, route }) => {
@@ -32,6 +32,13 @@ const ItensCaixa = ({ navigation, route }) => {
           <View style={ItensCaixaStyle.header}>
             <Image source={caixa.image} style={ItensCaixaStyle.imagem}/>
           </View>
+
+          {itens.map(item=>(
+            <TouchableOpacity key={item.id}>
+              <Image source={item.image}/>
+              <Text>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
       </ScrollView>
     </>
   )
