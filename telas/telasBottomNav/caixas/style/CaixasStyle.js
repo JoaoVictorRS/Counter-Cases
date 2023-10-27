@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const CaixasStyles = StyleSheet.create({
+const CaixasStyle = StyleSheet.create({
     container: {
         flexDirection: 'row',
         flexWrap: 'wrap', 
@@ -33,4 +33,4 @@ const CaixasStyles = StyleSheet.create({
       },
 });
 
-export default CaixasStyles
+export default CaixasStyle

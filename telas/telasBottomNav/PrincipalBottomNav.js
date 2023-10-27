@@ -8,6 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Caixas from './caixas/Caixas';
 import Inventario from './inventario/Inventario';
 import StatsPlayer from './statsPlayer/StatsPlayer';
+import CaixasStack from './caixas/CaixasStack';
 
 const Tab = createMaterialBottomTabNavigator();
 

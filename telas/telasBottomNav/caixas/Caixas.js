@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
+import { Image, ScrollView, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import CsAPI from '../../../services/CsAPI';
 import { View } from 'react-native';
-import CaixasStyles from './style/CaixasStyle';
+import CaixasStyle from './style/CaixasStyle';
 
 const Caixas = ({ navigation }) => {
 
@@ -14,18 +14,17 @@ const Caixas = ({ navigation }) => {
       setCaixas(resultado.data)
     })
   }, []);
-
-  console.log(caixas)
+  
   return (
     <>
       <ScrollView>
-        <View style={CaixasStyles.container}>
+        <View style={CaixasStyle.container}>
 
           {caixas.map(item => (
-            <View key={item.id} style={CaixasStyles.card}>
-              <Image source={item.image} style={CaixasStyles.image} />
-              <Text style={CaixasStyles.name}>{item.name}</Text>
-            </View>
+            <TouchableOpacity key={item.id} style={CaixasStyle.card} onPress={() => navigation.push('itens-caixa', { id: item.id })}>
+              <Image source={item.image} style={CaixasStyle.image} />
+              <Text style={CaixasStyle.name}>{item.name}</Text>
+            </TouchableOpacity>
           ))}
 
         </View>
