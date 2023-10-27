@@ -29,16 +29,18 @@ const ItensCaixa = ({ navigation, route }) => {
   return (
     <>
       <ScrollView>
-          <View style={ItensCaixaStyle.header}>
-            <Image source={caixa.image} style={ItensCaixaStyle.imagem}/>
-          </View>
+        <View style={ItensCaixaStyle.header}>
+          <Image source={caixa.image} style={ItensCaixaStyle.imagem} />
+          <Text style={ItensCaixaStyle}>{caixa.name}</Text>
+        </View>
 
-          {itens.map(item=>(
-            <TouchableOpacity key={item.id}>
-              <Image source={item.image}/>
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
+        {itens.map(item => (
+          <TouchableOpacity style={ItensCaixaStyle.container} key={item.id}>
+            <Image source={item.image} style={ItensCaixaStyle.skinImage}/>
+            <Text style={ItensCaixaStyle.skinName}>Nome da Skin</Text>
+            <Text style={ItensCaixaStyle.skinPrice}>Preço: $100</Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </>
   )
