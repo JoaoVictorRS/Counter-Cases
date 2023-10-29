@@ -3,6 +3,7 @@ import { Text } from 'react-native-paper'
 import CsVercelAPI from '../../../services/CsVercelAPI';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import ItensCaixaStyle from './style/ItensCaixaStyle';
+import { LinearGradient } from "expo-linear-gradient";
 
 const ItensCaixa = ({ navigation, route }) => {
 
@@ -23,24 +24,41 @@ const ItensCaixa = ({ navigation, route }) => {
     })
   }, []);
 
-  console.log(caixa)
-  console.log(itens)
+  const getStyleByRarity = (rarity) => {
+    if (rarity === 'Mil-Spec Grade') {
+      return ItensCaixaStyle.milSpecGrade;
+    } else if (rarity === 'Restricted') {
+      return ItensCaixaStyle.restricted;
+    } else if (rarity === 'Classified') {
+      return ItensCaixaStyle.classified;
+    } else if (rarity === 'Covert') {
+      return ItensCaixaStyle.covert;
+    } else {
+      return ItensCaixaStyle.defaultStyle;
+    }
+  };
+
 
   return (
     <>
       <ScrollView>
         <View style={ItensCaixaStyle.header}>
           <Image source={caixa.image} style={ItensCaixaStyle.imagem} />
-          <Text style={ItensCaixaStyle}>{caixa.name}</Text>
+          <Text style={ItensCaixaStyle.caixaName}>{caixa.name}</Text>
         </View>
 
-        {itens.map(item => (
-          <TouchableOpacity style={ItensCaixaStyle.container} key={item.id}>
-            <Image source={item.image} style={ItensCaixaStyle.skinImage}/>
-            <Text style={ItensCaixaStyle.skinName}>Nome da Skin</Text>
-            <Text style={ItensCaixaStyle.skinPrice}>Preço: $100</Text>
-          </TouchableOpacity>
-        ))}
+        <View style={ItensCaixaStyle.row}>
+          {itens.map(item => (
+            <LinearGradient style={ItensCaixaStyle.linearMargin} key={item.id} colors={["#848080", "#e1e1e3"]}>
+              <TouchableOpacity style={[ItensCaixaStyle.container, getStyleByRarity(item.rarity)]}>
+                <Image source={item.image} style={ItensCaixaStyle.skinImage} />
+                <Text style={ItensCaixaStyle.skinName}>{item.name}</Text>
+                <Text style={ItensCaixaStyle.skinPrice}>Preço: $100</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          ))}
+
+        </View>
       </ScrollView>
     </>
   )
