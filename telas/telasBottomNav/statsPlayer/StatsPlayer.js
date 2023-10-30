@@ -7,8 +7,8 @@ const StatsPlayer = () => {
   const [Estatisticas, setEstatisticas] = useState([]);
 
   useEffect(() => {
-    SteamAPI.get(`/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&steamid=${idUser}`).then(resultado => {
-      setEstatisticas(resultado.data)
+    SteamAPI.get(`/GetUserStatsForGame`).then(resultado => {
+      setEstatisticas(resultado.data.playerstats)
     })
   }, []);
 

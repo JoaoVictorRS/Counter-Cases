@@ -1,12 +1,10 @@
 import axios from "axios";
-import {STEAM_API_KEY} from '@env'
 
 const SteamAPI = axios.create({
-    baseURL: 'https://api.steampowered.com',
+    baseURL: 'http://localhost:3000',
     params: {
-        key: `${STEAM_API_KEY}`,
+        idUser: ''//Aqui a gente precisa puxar o id da pessoa que ela colocou no login
     }
-    
 })
 
 export default SteamAPI

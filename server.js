@@ -14,9 +14,14 @@ app.use(function (req, res, next) {
 // Here gets parameters from end of URL to use in api address.  These parameters will come from submit buttons 
 // on the respective sites
 //Requires playerID
-app.get('/getuserstats', function (req, res) {
-  var idUser = req.body;
-  var url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=' + STEAM_API_KEY + '&steamid=' + idUser;
+app.get('/GetUserStatsForGame', function (req, res) {
+
+  var qParams = [];
+  for (var p in req.query) {
+    qParams.push({ 'name': p, 'value': req.query[p] })
+  }
+
+  var url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=' + process.env.STEAM_API_KEY + '&steamid=' + qParams[0].value;
   request(url, function (err, response, body) {
     if (!err && response.statusCode < 400) {
       console.log(body);
