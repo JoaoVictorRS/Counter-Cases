@@ -42,7 +42,7 @@ app.get('/UserInventory', function (req, res) {
     qParams.push({ 'name': p, 'value': req.query[p] })
   }
 
-  var url = 'http://steamcommunity.com/inventory/'+ qParams[0].value +'/730/2?l=portuguese&count=5000';
+  var url = 'http://steamcommunity.com/inventory/'+ qParams[0].value +'/730/2?l=english&count=5000';
   request(url, function (err, response, body) {
     if (!err && response.statusCode < 400) {
       console.log(body);

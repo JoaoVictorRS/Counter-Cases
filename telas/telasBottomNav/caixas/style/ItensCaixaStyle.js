@@ -24,8 +24,8 @@ const ItensCaixaStyle = StyleSheet.create({
         marginBottom: '2%',
       },
       container: {
-        width: 150, // Largura do quadrado da skin
-        height: 150, // Altura do quadrado da skin
+        width: 130, // Largura do quadrado da skin
+        height: 130, // Altura do quadrado da skin
         borderColor: 'blue', // Cor da borda
         padding: 10,
         borderLeftWidth: 5,
