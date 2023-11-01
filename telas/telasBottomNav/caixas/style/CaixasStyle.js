@@ -31,6 +31,7 @@ const CaixasStyle = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
       },
+    
 });
 
 export default CaixasStyle

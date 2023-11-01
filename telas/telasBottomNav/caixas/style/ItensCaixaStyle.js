@@ -58,6 +58,7 @@ const ItensCaixaStyle = StyleSheet.create({
         borderColor: 'black',
       },
     
+    
 });
 
 export default ItensCaixaStyle
