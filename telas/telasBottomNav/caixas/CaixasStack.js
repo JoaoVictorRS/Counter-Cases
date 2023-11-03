@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
 import Caixas from './Caixas';
 import ItensCaixa from './ItensCaixa';
+import Login from '../../Login';
 
 const Stack = createNativeStackNavigator();
 
