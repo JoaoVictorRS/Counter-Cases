@@ -69,6 +69,24 @@ app.get('/ItemPrice', function (req, res) {
   });
 });
 
+//Puxa as informações do perfil da steam do usuario (por exemplo, fotos)
+app.get('/GetUserStatsForGame', function (req, res) {
+
+  //Requires playerID
+  var qParams = [];
+  for (var p in req.query) {
+    qParams.push({ 'name': p, 'value': req.query[p] })
+  }
+
+  var url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + process.env.STEAM_API_KEY + '&steamid=' + qParams[0].value;
+  request(url, function (err, response, body) {
+    if (!err && response.statusCode < 400) {
+      console.log(body);
+      res.send(body);
+    }
+  });
+});
+
 app.use(function (req, res) {
   res.type('text/plain');
   res.status(404);
