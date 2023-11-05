@@ -1,40 +1,95 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useState } from 'react'
-import { Alert, StyleSheet, TextInput, View } from 'react-native'
-import { Button, Text } from 'react-native-paper'
+import { Formik } from 'formik';
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Button, Text, TextInput } from 'react-native-paper'
+import ValidatorLogin from './ValidatorLogin';
+import { useFocusEffect } from '@react-navigation/native';
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
 
-  const [idUser, setUser] = useState('')
-
-   async function salvarid(){
-    const user = {
-      idUser
-    }
-
-    await AsyncStorage.setItem("Usuario", JSON.stringify(user));
-    console.log(user)
+  let usuario = {
+    usuario: ''
   }
 
-  //  async function mostrar(){
-  //   const json = await AsyncStorage.getItem("user");
-  //   const mostrarUser = JSON.parse(json);
+  function salvar(dados) {
 
-  //   alert("O id de Usuario é: ", mostrarUser);
-  // }
+    AsyncStorage.getItem('usuario').then(resultado => {
+
+      const usuario = JSON.parse(resultado) || []
+
+      if (usuario.length > 0) {
+        console.log('Há mais de um índice, não é permitido.');
+        return; // Não permita salvar se houver mais de um índice
+      }
+
+      usuario.push(dados)
+
+      AsyncStorage.setItem('usuario', JSON.stringify(usuario))
+
+      navigation.push('principal-bottom-nav')
+    })
+
+  }
+
+  //Isso vai automatizar o processo de apagar o id do usuario, ao clicar em algum lugar pra voltar pro login apaga automaticamente
+  useFocusEffect(
+    React.useCallback(() => {
+      // Função para remover o primeiro item do AsyncStorage
+      const removerPrimeiroItem = async () => {
+        try {
+          // Obter todos os itens do AsyncStorage
+          const todosItens = await AsyncStorage.getItem('usuario');
+          const listaDeItens = JSON.parse(todosItens) || [];
+
+          if (listaDeItens.length > 0) {
+            // Remover o primeiro item (índice 0)
+            listaDeItens.shift();
+
+            // Salvar a lista atualizada no AsyncStorage
+            await AsyncStorage.setItem('usuario', JSON.stringify(listaDeItens));
+
+            console.log('Primeiro item removido com sucesso.');
+          } else {
+            console.log('Não há itens para remover.');
+          }
+        } catch (error) {
+          console.error('Erro ao remover o primeiro item:', error);
+        }
+      }
+      removerPrimeiroItem()
+    }, [])
+  )
+
 
   return (
     <>
       <View style={styles.container}>
         <Text style={styles.title}></Text>
-        <TextInput
-        value={idUser}
-          style={styles.input}
-          placeholder="ID do usuário"
-          onChangeText={text => setUser(text)}
-        />
-        <Button mode='outlined' onPress={salvarid()}>Entrar</Button>
-        {/* <Button mode='outlined' onPress={mostrar()}>Alertar</Button> */}
+
+        <Formik
+          initialValues={usuario}
+          validationSchema={ValidatorLogin}
+          onSubmit={values => salvar(values)}
+        >
+          {({ handleChange, handleBlur, values, handleSubmit, errors, touched }) => (
+            <View>
+              <TextInput
+                mode='outlined'
+                label="ID do Usuário"
+                onBlur={handleBlur('usuario')}
+                value={values.usuario}
+                onChangeText={handleChange('usuario')}
+              />
+              {(touched.usuario && errors.usuario) &&
+                <Text>
+                  {errors.usuario}
+                </Text>
+              }
+              <Button mode='outlined' onPress={handleSubmit}>Entrar</Button>
+            </View>
+          )}
+        </Formik>
       </View>
     </>
   )
