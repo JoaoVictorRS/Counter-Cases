@@ -5,10 +5,9 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //Telas
-import Caixas from './caixas/Caixas';
-import Inventario from './inventario/Inventario';
-import StatsPlayer from './statsPlayer/StatsPlayer';
 import CaixasStack from './caixas/CaixasStack';
+import InventarioStack from './inventario/InventarioStack';
+import StatsPlayerStack from './statsPlayer/StatsPlayerStack';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -20,7 +19,7 @@ const principalBottomNav = () => {
           <Tab.Navigator>
             <Tab.Screen
               name="Caixas"
-              component={Caixas}
+              component={CaixasStack}
               options={{
                 tabBarIcon: () => (
                   <MaterialCommunityIcons name="archive" size={26} />
@@ -29,7 +28,7 @@ const principalBottomNav = () => {
             />
             <Tab.Screen
               name="Inventario"
-              component={Inventario}
+              component={InventarioStack}
               options={{
                 tabBarIcon: () => (
                   <MaterialCommunityIcons name="apps-box" size={26} />
@@ -38,7 +37,7 @@ const principalBottomNav = () => {
             />
             <Tab.Screen
               name="Conta"
-              component={StatsPlayer}
+              component={StatsPlayerStack}
               options={{
                 tabBarIcon: () => (
                   <MaterialCommunityIcons name="chart-arc" size={26} />

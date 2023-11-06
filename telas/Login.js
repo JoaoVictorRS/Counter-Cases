@@ -1,17 +1,95 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Formik } from 'formik';
 import React from 'react'
-import { StyleSheet, TextInput, View } from 'react-native'
-import { Button, Text } from 'react-native-paper'
+import { StyleSheet, View } from 'react-native'
+import { Button, Text, TextInput } from 'react-native-paper'
+import ValidatorLogin from './ValidatorLogin';
+import { useFocusEffect } from '@react-navigation/native';
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
+
+  let usuario = {
+    usuario: ''
+  }
+
+  function salvar(dados) {
+
+    AsyncStorage.getItem('usuario').then(resultado => {
+
+      const usuario = JSON.parse(resultado) || []
+
+      if (usuario.length > 0) {
+        console.log('Há mais de um índice, não é permitido.');
+        return; // Não permita salvar se houver mais de um índice
+      }
+
+      usuario.push(dados)
+
+      AsyncStorage.setItem('usuario', JSON.stringify(usuario))
+
+      navigation.push('principal-bottom-nav')
+    })
+
+  }
+
+  //Isso vai automatizar o processo de apagar o id do usuario, ao clicar em algum lugar pra voltar pro login apaga automaticamente
+  useFocusEffect(
+    React.useCallback(() => {
+      // Função para remover o primeiro item do AsyncStorage
+      const removerPrimeiroItem = async () => {
+        try {
+          // Obter todos os itens do AsyncStorage
+          const todosItens = await AsyncStorage.getItem('usuario');
+          const listaDeItens = JSON.parse(todosItens) || [];
+
+          if (listaDeItens.length > 0) {
+            // Remover o primeiro item (índice 0)
+            listaDeItens.shift();
+
+            // Salvar a lista atualizada no AsyncStorage
+            await AsyncStorage.setItem('usuario', JSON.stringify(listaDeItens));
+
+            console.log('Primeiro item removido com sucesso.');
+          } else {
+            console.log('Não há itens para remover.');
+          }
+        } catch (error) {
+          console.error('Erro ao remover o primeiro item:', error);
+        }
+      }
+      removerPrimeiroItem()
+    }, [])
+  )
+
+
   return (
     <>
       <View style={styles.container}>
         <Text style={styles.title}></Text>
-        <TextInput
-          style={styles.input}
-          placeholder="ID do usuário"
-        />
-        <Button mode='outlined' onPress={() => navigation.push('principal-bottom-nav')}>Entrar</Button>
+
+        <Formik
+          initialValues={usuario}
+          validationSchema={ValidatorLogin}
+          onSubmit={values => salvar(values)}
+        >
+          {({ handleChange, handleBlur, values, handleSubmit, errors, touched }) => (
+            <View>
+              <TextInput
+                mode='outlined'
+                label="ID do Usuário"
+                onBlur={handleBlur('usuario')}
+                value={values.usuario}
+                onChangeText={handleChange('usuario')}
+              />
+              {(touched.usuario && errors.usuario) &&
+                <Text>
+                  {errors.usuario}
+                </Text>
+              }
+              <Button mode='outlined' onPress={handleSubmit}>Entrar</Button>
+            </View>
+          )}
+        </Formik>
       </View>
     </>
   )
