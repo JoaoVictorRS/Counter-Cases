@@ -4,7 +4,6 @@ import { Text, TextInput } from 'react-native-paper'
 import CsAPI from '../../../services/CsAPI';
 import { View } from 'react-native';
 import CaixasStyle from './style/CaixasStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Caixas = ({ navigation, route }) => {
 
@@ -18,38 +17,6 @@ const Caixas = ({ navigation, route }) => {
     });
   }, []);
 
-  async function ChamaID() {
-    try {
-      const dados = await AsyncStorage.getItem('usuario');
-      if (dados !== null) {
-        const dadosParseados = JSON.parse(dados);
-        if (Array.isArray(dadosParseados) && dadosParseados.length > 0) {
-          const usuario = dadosParseados[0].usuario;
-          if (usuario !== undefined) {
-            return usuario;
-          }
-        }
-      }
-      return null;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  console.log(
-    ChamaID()
-      .then((valor) => {
-        if (valor !== null) {
-          console.log(valor);
-        } else {
-          console.log('A chave não existe no AsyncStorage');
-        }
-      })
-      .catch((error) => {
-        console.error('Erro ao recuperar dados:', error);
-      })
-  );
-
   const filtrarCaixas = () => {
     return caixas.filter((item) =>
       item.name.toLowerCase().includes(termoPesquisa.toLowerCase())
@@ -62,7 +29,7 @@ const Caixas = ({ navigation, route }) => {
 
       <TextInput
             style={[{ alignSelf: 'center', justifyContent:"center",flex: 1, }]}
-            placeholder="Caixas CsGO"
+            placeholder="Procurar..."
             mode=''
             onChangeText={(texto) => setTermoPesquisa(texto)}
           />
