@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, TouchableOpacity } from 'react-native'
-import { Text } from 'react-native-paper'
+import { Text, TextInput } from 'react-native-paper'
 import CsAPI from '../../../services/CsAPI';
 import { View } from 'react-native';
 import CaixasStyle from './style/CaixasStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Caixas = ({ navigation }) => {
+const Caixas = ({ navigation, route }) => {
+
 
   const [caixas, setCaixas] = useState([]);
+  const [termoPesquisa, setTermoPesquisa] = useState('');
 
   useEffect(() => {
-    CsAPI.get('/crates/cases.json').then(resultado => {
-      setCaixas(resultado.data)
-    })
+    CsAPI.get('/crates/cases.json').then((resultado) => {
+      setCaixas(resultado.data);
+    });
   }, []);
 
   async function ChamaID() {
     try {
-      const dados = await AsyncStorage.getItem('usuario'); // Substitua 'chave' pelo nome da chave que você quer recuperar
+      const dados = await AsyncStorage.getItem('usuario');
       if (dados !== null) {
-        const dadosParseados = JSON.parse(dados); // Converter a string JSON em um objeto JavaScript
+        const dadosParseados = JSON.parse(dados);
         if (Array.isArray(dadosParseados) && dadosParseados.length > 0) {
           const usuario = dadosParseados[0].usuario;
           if (usuario !== undefined) {
@@ -28,41 +30,62 @@ const Caixas = ({ navigation }) => {
           }
         }
       }
-      return null; // Retornar nulo se os dados ou o item "usuario" não foram encontrados
+      return null;
     } catch (error) {
-      throw error; // Rejeita a Promise e propaga o erro
+      throw error;
     }
   }
 
-  console.log(ChamaID()
-    .then((valor) => {
-      if (valor !== null) {
-        console.log(valor);
-      } else {
-        console.log('A chave não existe no AsyncStorage');
-      }
-    })
-    .catch((error) => {
-      console.error('Erro ao recuperar dados:', error);
-    }))
+  console.log(
+    ChamaID()
+      .then((valor) => {
+        if (valor !== null) {
+          console.log(valor);
+        } else {
+          console.log('A chave não existe no AsyncStorage');
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao recuperar dados:', error);
+      })
+  );
+
+  const filtrarCaixas = () => {
+    return caixas.filter((item) =>
+      item.name.toLowerCase().includes(termoPesquisa.toLowerCase())
+    );
+  };
 
   return (
     <>
-      <ScrollView>
-        <View style={CaixasStyle.container}>
+      <ScrollView style={{ padding: 10}}>
 
-          {caixas.map(item => (
-            <TouchableOpacity key={item.id} style={CaixasStyle.card} onPress={() => navigation.push('itens-caixa', { id: item.id })}>
+      <TextInput
+            style={[{ alignSelf: 'center', justifyContent:"center",flex: 1, }]}
+            placeholder="Caixas CsGO"
+            mode=''
+            onChangeText={(texto) => setTermoPesquisa(texto)}
+          />
+
+        <View style={CaixasStyle.container}>
+         
+          {filtrarCaixas().map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={CaixasStyle.card}
+              onPress={() =>
+                navigation.push('itens-caixa', { id: item.id })
+              }
+            >
               <Image source={item.image} style={CaixasStyle.image} />
               <Text style={CaixasStyle.name}>{item.name}</Text>
             </TouchableOpacity>
           ))}
-
         </View>
-      </ScrollView >
+      </ScrollView>
     </>
-  )
-}
+  );
+};
 
 export default Caixas
 

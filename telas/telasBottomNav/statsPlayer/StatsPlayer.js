@@ -24,6 +24,7 @@ const StatsPlayer = () => {
         <View>
           {Estatisticas.map(item => (
             <Text key={item.name}>{item.name} : {item.value}</Text>
+            
           ))}
         </View>
       </ScrollView >
