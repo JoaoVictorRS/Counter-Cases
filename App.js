@@ -24,7 +24,9 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{
+          headerShown: false, // Esconde o cabeçalho em todas as telas
+        }}>
           <Stack.Screen name="login" component={Login} options={{ title: 'Login' }} />
           <Stack.Screen name="principal-bottom-nav" component={principalBottomNav} options={{ title: 'Counter-Stats' }} />
         </Stack.Navigator>

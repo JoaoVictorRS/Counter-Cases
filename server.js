@@ -60,7 +60,7 @@ app.get('/ItemPrice', function (req, res) {
     qParams.push({ 'name': p, 'value': req.query[p] })
   }
 
-  var url = 'https://steamcommunity.com/market/priceoverview/?appid=730&market_hash_name='+ qParams[0].value +'%29&currency=7';
+  var url = 'https://steamcommunity.com/market/priceoverview/?appid=730&market_hash_name='+ qParams[0].value +'%20%28Field-Tested%29&currency=7';
   request(url, function (err, response, body) {
     if (!err && response.statusCode < 400) {
       console.log(body);

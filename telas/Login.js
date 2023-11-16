@@ -9,25 +9,23 @@ import { useFocusEffect } from '@react-navigation/native';
 const Login = ({ navigation, route }) => {
 
   let usuario = {
-    usuario: ''
+    usuario: '76561198176113609'
   }
 
   function salvar(dados) {
 
     AsyncStorage.getItem('usuario').then(resultado => {
 
-      const usuario = JSON.parse(resultado) || []
+      const usuario = JSON.parse(resultado) || 0
 
       if (usuario.length > 0) {
         console.log('Há mais de um índice, não é permitido.');
         return; // Não permita salvar se houver mais de um índice
       }
 
-      usuario.push(dados)
+      AsyncStorage.setItem('usuario', dados.usuario)
 
-      AsyncStorage.setItem('usuario', JSON.stringify(usuario))
-
-      navigation.push('principal-bottom-nav')
+      navigation.replace('principal-bottom-nav')
     })
 
   }
@@ -95,6 +93,10 @@ const Login = ({ navigation, route }) => {
   )
 }
 
+
+
+export default Login
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,5 +118,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default Login
