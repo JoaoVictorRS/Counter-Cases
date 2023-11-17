@@ -70,17 +70,25 @@ const ItensCaixa = ({ navigation, route }) => {
     const itensPromise = CsVercelAPI.get(`items?id=${id}`);
 
     // Use Promise.all para esperar que ambas as solicitações sejam concluídas
-    Promise.all([caixaPromise, itensPromise])
-      .then(([caixaResponse, itensResponse]) => {
-        setCaixa(caixaResponse.data);
-        setItens(itensResponse.data.contains);
-        setIsLoading(false); // Quando ambas as solicitações estiverem concluídas, defina isLoading como false
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados da API: ", error);
-        setIsLoading(false); // Se ocorrer um erro, também defina isLoading como false
-      });
-  }, []);
+   // Adicionando uma terceira solicitação para obter os preços das skins
+   const precosPromise = axios.get('http://localhost:3000/ItemPrice?market_hash_name=');
+
+   // Use Promise.all para esperar que todas as solicitações sejam concluídas
+   Promise.all([caixaPromise, itensPromise, precosPromise])
+     .then(([caixaResponse, itensResponse, precosResponse]) => {
+       setCaixa(caixaResponse.data);
+       const itensComPrecos = itensResponse.data.contains.map(item => {
+         const precoItem = precosResponse.data.find(preco => preco.itemId === item.id);
+         return { ...item, price: precoItem ? precoItem.price : null };
+       });
+       setItens(itensComPrecos);
+       setIsLoading(false);
+     })
+     .catch((error) => {
+       console.error("Erro ao buscar dados da API: ", error);
+       setIsLoading(false);
+     });
+ }, []);
 
   const getStyleByRarity = (rarity) => {
     if (rarity === 'Mil-Spec Grade') {
