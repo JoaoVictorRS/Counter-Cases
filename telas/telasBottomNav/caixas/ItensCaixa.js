@@ -23,11 +23,10 @@ const ItensCaixa = ({ navigation, route }) => {
       const pricePromises = items.map(async (item) => {
         try {
           const formattedItemName = formatItemNameForURL(item.name);
-          const response = await axios.get('http://localhost:3000/ItemPrice?market_hash_name=' + formattedItemName, {
-            timeout: 5000, // Definindo timeout para 5 segundos
+          const response = await axios.get(`http://localhost:3000/ItemPrice?market_hash_name=${formattedItemName}`, {
+            timeout: 10000, // Definindo timeout para 10 segundos
           });
           return { ...item, price: response.data };
-
         } catch (error) {
           if (axios.isCancel(error)) {
             console.log('Requisição cancelada:', error.message);
@@ -36,25 +35,26 @@ const ItensCaixa = ({ navigation, route }) => {
           } else {
             console.error('Erro ao buscar preço do item:', error);
           }
-
           // Retornar o item com os dados disponíveis mesmo em caso de falha na requisição de preço
-          return { ...item, price: {median_price: 'N/A'} };
+          return { ...item, price: { median_price: 'N/A' } };
         }
       });
-
+  
       return Promise.all(pricePromises);
     };
-
+  
     const fetchData = async () => {
       try {
-        const caixaResponse = await CsVercelAPI.get(`items?id=${id}`);
+        const [caixaResponse, itensResponse] = await Promise.all([
+          CsVercelAPI.get(`items?id=${id}`),
+          CsVercelAPI.get(`items?id=${id}`),
+        ]);
+  
         setCaixa(caixaResponse.data);
-
-        const itensResponse = await CsVercelAPI.get(`items?id=${id}`);
         const itemsData = itensResponse.data.contains;
-
+  
         const itemsWithPrices = await fetchItemPrices(itemsData);
-
+  
         setItens(itemsWithPrices);
         setIsLoading(false);
       } catch (error) {
@@ -62,7 +62,7 @@ const ItensCaixa = ({ navigation, route }) => {
         setIsLoading(false);
       }
     };
-
+  
     fetchData();
 
     // Iniciar ambas as solicitações à API
@@ -88,7 +88,7 @@ const ItensCaixa = ({ navigation, route }) => {
        console.error("Erro ao buscar dados da API: ", error);
        setIsLoading(false);
      });
- }, []);
+ }, [route.params.id]);
 
   const getStyleByRarity = (rarity) => {
     if (rarity === 'Mil-Spec Grade') {
@@ -108,7 +108,7 @@ const ItensCaixa = ({ navigation, route }) => {
     <>
 
       <ScrollView style={{ position: 'relative', paddingHorizontal: 10 }} >
-        <View style={{ flex: 1, bottom: 0, right: 0, left: 0, position: 'absolute' }}>
+        <View style={{ flex: 1, bottom: 0, right: 0, left: 0,top: '125%', position: 'absolute' }}>
           {isLoading ? (
             <Loading />
           ) : (

@@ -8,6 +8,7 @@ const StatsPlayer = () => {
 
   const [Estatisticas, setEstatisticas] = useState([]);
   const [CalculoKD, setCalculoKD] = useState({})
+  const [TaxaHS, setTaxaHS] = useState({})
 
   useEffect(() => {
 
@@ -17,6 +18,7 @@ const StatsPlayer = () => {
         const estats = resultado.data.playerstats.stats
         setEstatisticas(estats)
         setCalculoKD(estats[0].value / estats[1].value)
+        setTaxaHS(estats[0].value / estats[25])
       })
       
     })
