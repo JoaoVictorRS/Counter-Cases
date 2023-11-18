@@ -32,25 +32,6 @@ app.get('/GetUserStatsForGame', function (req, res) {
   });
 });
 
-
-//Puxa o inventario do usuario
-app.get('/UserInventory', function (req, res) {
-
-  //Requires playerID
-  var qParams = [];
-  for (var p in req.query) {
-    qParams.push({ 'name': p, 'value': req.query[p] })
-  }
-
-  var url = 'http://steamcommunity.com/inventory/'+ qParams[0].value +'/730/2?l=english&count=5000';
-  request(url, function (err, response, body) {
-    if (!err && response.statusCode < 400) {
-      console.log(body);
-      res.send(body);
-    }
-  });
-});
-
 //Puxa os preços das skins
 app.get('/ItemPrice', function (req, res) {
 
@@ -60,7 +41,7 @@ app.get('/ItemPrice', function (req, res) {
     qParams.push({ 'name': p, 'value': req.query[p] })
   }
 
-  var url = 'https://steamcommunity.com/market/priceoverview/?appid=730&market_hash_name='+ qParams[0].value +'%29&currency=7';
+  var url = 'https://steamcommunity.com/market/priceoverview/?appid=730&market_hash_name='+ qParams[0].value +'%20%28Field-Tested%29&currency=7';
   request(url, function (err, response, body) {
     if (!err && response.statusCode < 400) {
       console.log(body);
@@ -70,7 +51,7 @@ app.get('/ItemPrice', function (req, res) {
 });
 
 //Puxa as informações do perfil da steam do usuario (por exemplo, fotos)
-app.get('/GetUserStatsForGame', function (req, res) {
+app.get('/GetPlayerSummaries', function (req, res) {
 
   //Requires playerID
   var qParams = [];
@@ -78,7 +59,7 @@ app.get('/GetUserStatsForGame', function (req, res) {
     qParams.push({ 'name': p, 'value': req.query[p] })
   }
 
-  var url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + process.env.STEAM_API_KEY + '&steamid=' + qParams[0].value;
+  var url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + process.env.STEAM_API_KEY + '&steamids=' + qParams[0].value;
   request(url, function (err, response, body) {
     if (!err && response.statusCode < 400) {
       console.log(body);

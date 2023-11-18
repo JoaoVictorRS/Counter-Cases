@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -6,12 +6,33 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 //Telas
 import CaixasStack from './caixas/CaixasStack';
-import InventarioStack from './inventario/InventarioStack';
 import StatsPlayerStack from './statsPlayer/StatsPlayerStack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
+import { Image } from 'react-native';
+import SteamAPI from '../../services/SteamAPI';
 
 const Tab = createMaterialBottomTabNavigator();
 
 const principalBottomNav = () => {
+
+  const [accountIcon, setAccountIcon] = useState([]);
+  const [accountName, setAccountName] = useState('');
+
+  useEffect(() => {
+
+    AsyncStorage.getItem('usuario').then(usuario => {
+
+      SteamAPI.get(`/GetPlayerSummaries?idUser=` + usuario).then(resultado => {
+        const resposta = resultado.data.response.players
+        setAccountIcon(resposta[0].avatar)
+        setAccountName(resposta[0].personaname)
+      })
+
+    })
+
+  }, []);
+
   return (
     <>
       <PaperProvider>
@@ -27,20 +48,20 @@ const principalBottomNav = () => {
               }}
             />
             <Tab.Screen
-              name="Inventario"
-              component={InventarioStack}
-              options={{
-                tabBarIcon: () => (
-                  <MaterialCommunityIcons name="apps-box" size={26} />
-                )
-              }}
-            />
-            <Tab.Screen
-              name="Conta"
+              name={accountName || ' '}
               component={StatsPlayerStack}
               options={{
                 tabBarIcon: () => (
-                  <MaterialCommunityIcons name="chart-arc" size={26} />
+                  accountIcon ? <Image
+                    source={{ uri: accountIcon }}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      borderWidth: 2,
+                      borderColor: 'black',
+                    }}
+                  /> : <MaterialCommunityIcons name="chart-arc" size={26} />
                 )
               }}
             />
