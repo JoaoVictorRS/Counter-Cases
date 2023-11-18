@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper'
 import ValidatorLogin from './ValidatorLogin';
 import { useFocusEffect } from '@react-navigation/native';
+import { Image } from 'react-native-web';
 
 const Login = ({ navigation, route }) => {
 
@@ -65,9 +66,11 @@ const Login = ({ navigation, route }) => {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.title}></Text>
+      <Image style={styles.img} source={require('../imagens/logo.png')} />
+        <Text style={styles.title}>Counter Strike 
+        {'\n'}Status</Text>
 
-        <Formik
+        <Formik style={styles.input}
           initialValues={usuario}
           validationSchema={ValidatorLogin}
           onSubmit={values => salvar(values)}
@@ -86,7 +89,7 @@ const Login = ({ navigation, route }) => {
                   {errors.usuario}
                 </Text>
               }
-              <Button mode='outlined' onPress={handleSubmit}>Entrar</Button>
+              <Button style={styles.butao} mode='outlined' onPress={handleSubmit}><Text style={styles.btt}>Entrar</Text></Button>
             </View>
           )}
         </Formik>
@@ -101,10 +104,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#999797'
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    color: '#050505',
+    textAlign: 'center'
   },
   input: {
     width: '100%',
@@ -114,7 +120,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    backgroundColor: '#262626',
+    color: '#050505'
   },
+  butao: {
+    borderRadius: 10,
+    borderColor: '#f2f0f0',
+    borderWidth: 1,
+    backgroundColor: '#262626',
+    marginTop: 15,
+    
+  },
+  btt: {
+   color: '#ffffff'
+  },
+  img: {
+    width: 250,
+    height: 100
+  }
 });
 
 export default Login
