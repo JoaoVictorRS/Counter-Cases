@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { Image } from 'react-native';
 import SteamAPI from '../../services/SteamAPI';
+import Noticias from '../noticias/Noticias';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -62,6 +63,15 @@ const principalBottomNav = () => {
                       borderColor: 'black',
                     }}
                   /> : <MaterialCommunityIcons name="chart-arc" size={26} />
+                )
+              }}
+            />
+             <Tab.Screen
+              name="Noticias"
+              component={Noticias}
+              options={{
+                tabBarIcon: () => (
+                  <MaterialCommunityIcons name="newspaper-variant-outline" size={26} />
                 )
               }}
             />

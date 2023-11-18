@@ -18,7 +18,7 @@ const StatsPlayer = () => {
         const estats = resultado.data.playerstats.stats
         setEstatisticas(estats)
         setCalculoKD(estats[0].value / estats[1].value)
-        setTaxaHS(estats[0].value / estats[25])
+        setTaxaHS(estats[0].value / estats[25].value)
       })
       
     })
@@ -27,6 +27,7 @@ const StatsPlayer = () => {
 
   console.log(Estatisticas)
   console.log(CalculoKD)
+  console.log(TaxaHS)
 
   return (
     <>

@@ -32,6 +32,24 @@ app.get('/GetUserStatsForGame', function (req, res) {
   });
 });
 
+//Puxa todos registros do CS do usuario
+app.get('/GetNewsForApp', function (req, res) {
+
+  //Requires playerID
+  var qParams = [];
+  for (var p in req.query) {
+    qParams.push({ 'name': p, 'value': req.query[p] })
+  }
+
+  var url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=730&count=5&maxlength=1000&format=json'
+  request(url, function (err, response, body) {
+    if (!err && response.statusCode < 400) {
+      console.log(body);
+      res.send(body);
+    }
+  });
+});
+
 //Puxa os preços das skins
 app.get('/ItemPrice', function (req, res) {
 
