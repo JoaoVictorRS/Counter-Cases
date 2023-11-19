@@ -65,8 +65,6 @@ const Login = ({ navigation, route }) => {
     <>
       <View style={styles.container}>
       <Image style={styles.img} source={require('../imagens/logo.png')} />
-        <Text style={styles.title}>Counter Strike 
-        {'\n'}Status</Text>
 
         <Formik style={styles.input}
           initialValues={usuario}
