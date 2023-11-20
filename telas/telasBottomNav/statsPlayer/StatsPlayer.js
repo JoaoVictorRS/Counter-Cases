@@ -6,16 +6,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StatsPlayerStyle from './style/StatsPlayerStyle';
 
 const StatsPlayer = () => {
-
+  
   const [Estatisticas, setEstatisticas] = useState([]);
-  const [AccountIcon, setAccountIcon] = useState([])
-  const [AccountName, setAccountName] = useState('')
-  const [AccountCountry, setAccountCountry] = useState('')
+  const [Kills, setKills] = useState({})
+  const [Deaths, setDeaths] = useState({})
   const [CalculoKD, setCalculoKD] = useState({})
   const [TaxaHS, setTaxaHS] = useState({})
   const [HorasJogadas, setHorasJogadas] = useState({})
   const [TaxaAcerto, setTaxaAcerto] = useState({})
 
+  //Usuario steam
+  const [AccountIcon, setAccountIcon] = useState([])
+  const [AccountName, setAccountName] = useState('')
+  const [AccountCountry, setAccountCountry] = useState('')
+  
   useEffect(() => {
 
     AsyncStorage.getItem('usuario').then(usuario => {
@@ -30,6 +34,8 @@ const StatsPlayer = () => {
       SteamAPI.get(`/GetUserStatsForGame?idUser=` + usuario).then(resultado => {
         const estats = resultado.data.playerstats.stats
         setEstatisticas(estats)
+        setKills(estats[0])
+        setDeaths(estats[1])
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
         setTaxaHS(((estats[25].value / estats[0].value) * 100).toFixed(2))
         setHorasJogadas((estats[2].value / 3600).toFixed(2))
@@ -39,8 +45,6 @@ const StatsPlayer = () => {
     })
 
   }, []);
-
-  const countryFormatted = AccountCountry.trim().replace(/"/g, '');
 
   function removerAspas(string) {
     return string.replace(/"/g, '');
@@ -64,7 +68,7 @@ const StatsPlayer = () => {
 
           <View style={StatsPlayerStyle.info_usuario}>
             <Text style={StatsPlayerStyle.nome_usuario}>{AccountName}</Text>
-            <Image style={StatsPlayerStyle.pais_usuario} source={{ uri: `https://flagsapi.com/${countryFormatted}/shiny/32.png` }} />
+            <Image style={StatsPlayerStyle.pais_usuario} source={{ uri: `https://flagsapi.com/${removerAspas(AccountCountry)}/shiny/32.png` }} />
           </View>
         </View>
 
