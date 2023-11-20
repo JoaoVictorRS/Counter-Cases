@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper'
 import ValidatorLogin from './ValidatorLogin';
 import { useFocusEffect } from '@react-navigation/native';
-import { Image } from 'react-native-web';
+import { Image } from 'react-native';
 import Modal from 'react-native-modal';
 
 const Login = ({ navigation, route }) => {
