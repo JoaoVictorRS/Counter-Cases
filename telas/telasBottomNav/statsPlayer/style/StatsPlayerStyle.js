@@ -8,28 +8,69 @@ const StatsPlayerStyle = StyleSheet.create({
         padding: '5%',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        marginBottom: 30
     },
-    imagem_usuario:{
+    imagem_usuario: {
         width: 100,
         height: 100,
         borderWidth: 3,
         borderColor: '#6ccef5'
     },
-    info_usuario:{
+    info_usuario: {
         marginLeft: '5%',
         alignSelf: 'center'
     },
-    nome_usuario:{
-        fontSize: '2rem',
+    nome_usuario: {
+        fontSize: '1.3rem',
         color: 'white'
     },
-    pais_usuario:{
+    pais_usuario: {
         width: 32,
         height: 32
     },
+    botao_usuario: {
+        marginLeft: '15%',
+        alignSelf: 'center'
+    },
+    botao_conteudo: {
+        alignContent: 'center',
+        flexDirection: 'row',
+    },
+    botao_text: {
+        fontSize: 16,
+        marginRight: 5,
+        alignSelf: 'center',
+        color: 'white'
+    },
     //ESTILIZAÇÃO DE INFORMAÇÕES DO CS
-    
+    principal_container: {
+        flex: 1
+    },
+    horas_container:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: '5%'
+    },
+    kill_death_container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+    kill_death_linha: {
+        borderLeftWidth: 1, // Espessura da linha
+        borderLeftColor: 'black', // Cor da linha (preto neste exemplo, pode alterar para a cor desejada)
+        height: 50, // Altura da linha (ajuste conforme necessário)
+    },
+    proporcao_kd_container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '5%'
+    },
 
 })
 

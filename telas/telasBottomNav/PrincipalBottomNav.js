@@ -3,15 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { PaperProvider } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-//Telas
-import CaixasStack from './caixas/CaixasStack';
-import StatsPlayerStack from './statsPlayer/StatsPlayerStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { Image } from 'react-native';
 import SteamAPI from '../../services/SteamAPI';
-import NoticiasStack from '../noticias/NoticiasStack';
+
+//Telas
+import CaixasStack from './caixas/CaixasStack';
+import StatsPlayerStack from './statsPlayer/StatsPlayerStack';
+import NoticiasStack from './noticias/NoticiasStack';
 
 const Tab = createMaterialBottomTabNavigator();
 

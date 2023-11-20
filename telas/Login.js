@@ -97,15 +97,15 @@ const Login = ({ navigation, route }) => {
         </Formik>
         <Modal isVisible={isModalVisible}>
           <View style={styles.modalContainer}>
-            <Text style={{textAlign:'center'}}>Primeiro passo: Abra a steam, e clique no canto superior direito, onde aparece sua foto e nome.</Text>
+            <Text style={{ textAlign: 'center' }}>Primeiro passo: Abra a steam, e clique no canto superior direito, onde aparece sua foto e nome.</Text>
             <Image style={styles.modalImage} source={require('../imagens/step1.png')} />
-            <Text style={{textAlign:'center', marginBottom: 10}}>Segundo passo: Vai abrir uma caixa, clique na opção "Detalhes da conta"</Text>
+            <Text style={{ textAlign: 'center', marginBottom: 10 }}>Segundo passo: Vai abrir uma caixa, clique na opção "Detalhes da conta"</Text>
             <Image style={styles.modalImage1} source={require('../imagens/step2.png')} />
-            <Text style={{textAlign:'center', marginBottom: 5}}>Terceiro Passo: Copie os numeros que aparecem após "ID Steam:"</Text>
+            <Text style={{ textAlign: 'center', marginBottom: 5 }}>Terceiro Passo: Copie os numeros que aparecem após "ID Steam:"</Text>
             <Image style={styles.modalImage1} source={require('../imagens/step3.png')} />
             <Button style={styles.botao_modal} mode='outlined' onPress={() => setModalVisible(false)}>
               <Text style={styles.btt}>Fechar</Text>
-            </Button> 
+            </Button>
           </View>
         </Modal>
       </View>
@@ -167,14 +167,14 @@ const styles = StyleSheet.create({
     marginTop: 15,
 
   },
-  
+
   btt: {
     color: '#ffffff'
   },
   img: {
     width: 250,
     height: 100,
-    marginBottom:40,
+    marginBottom: 40,
   },
 
   modalContainer: {

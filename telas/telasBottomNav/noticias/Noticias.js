@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import SteamAPI from '../../services/SteamAPI'
+import SteamAPI from '../../../services/SteamAPI'
 import { Text } from 'react-native-paper'
 import { useEffect } from 'react'
 import { ScrollView, View } from 'react-native'
