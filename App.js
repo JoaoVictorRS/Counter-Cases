@@ -31,44 +31,6 @@ export default function App() {
           <Stack.Screen name="principal-bottom-nav" component={principalBottomNav} options={{ title: 'Counter-Stats' }} />
         </Stack.Navigator>
       </NavigationContainer>
-      {/*
-      
-      +++++++++++++++SOLUÇÃO TEMPORARIA+++++++++++++++
-      
-      <PaperProvider>
-        <NavigationContainer independent={true}>
-          <Tab.Navigator>
-            <Tab.Screen
-              name="Caixas"
-              component={CaixasStack}
-              options={{
-                tabBarIcon: () => (
-                  <MaterialCommunityIcons name="archive" size={26} />
-                )
-              }}
-            />
-            <Tab.Screen
-              name="Inventario"
-              component={InventarioStack}
-              options={{
-                tabBarIcon: () => (
-                  <MaterialCommunityIcons name="apps-box" size={26} />
-                )
-              }}
-            />
-            <Tab.Screen
-              name="Conta"
-              component={StatsPlayerStack}
-              options={{
-                tabBarIcon: () => (
-                  <MaterialCommunityIcons name="chart-arc" size={26} />
-                )
-              }}
-            />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
-     */}
     </>
   );
 }

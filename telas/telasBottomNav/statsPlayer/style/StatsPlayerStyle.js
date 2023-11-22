@@ -71,6 +71,17 @@ const StatsPlayerStyle = StyleSheet.create({
         alignItems: 'center',
         marginTop: '5%'
     },
+    view_grafico:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '10%'
+    },
+    grafico_acerto_disparo:{
+        width: 300,
+        height: 300,
+    },
 
 })
 

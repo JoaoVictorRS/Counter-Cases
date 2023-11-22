@@ -5,7 +5,7 @@ import { Image, Linking, ScrollView, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StatsPlayerStyle from './style/StatsPlayerStyle';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { PieChart } from 'react-native-chart-kit';
+import { VictoryLabel, VictoryPie } from "victory-native";
 
 const StatsPlayer = () => {
 
@@ -67,9 +67,15 @@ const StatsPlayer = () => {
     Linking.openURL(AccountURL);
   };
 
+
+
+  //Sessão dos graficos
+  const data_disparos_acertos = [
+    { x: "Disparos", y: Disparos },
+    { x: "Acertos", y: Acertos }
+  ]
+
   console.log(Estatisticas)
-  console.log(TaxaHS)
-  console.log(TaxaAcerto)
 
   return (
     <>
@@ -102,33 +108,58 @@ const StatsPlayer = () => {
 
           <View>
             <View style={StatsPlayerStyle.horas_container}>
-              <Text style={{ fontSize: 30 }}>{formataNumero(removerAspas(JSON.stringify(HorasJogadas)))}</Text>
               <Text style={{ fontSize: 18 }}>Horas de Jogo</Text>
+              <Text style={{ fontSize: 30 }}>{formataNumero(removerAspas(JSON.stringify(HorasJogadas)))}</Text>
             </View>
           </View>
 
           <View>
             <View style={StatsPlayerStyle.kill_death_container}>
               <View>
-                <Text style={{ fontSize: 40 }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
+                <Text style={{ fontSize: 40, color: '#44CD28' }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Vitmas</Text>
               </View>
 
               <View style={StatsPlayerStyle.kill_death_linha}></View>
 
               <View>
-                <Text style={{ fontSize: 40 }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
+                <Text style={{ fontSize: 40, color: '#C82C2C' }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Mortes</Text>
               </View>
             </View>
 
             <View style={StatsPlayerStyle.proporcao_kd_container}>
-              <Text style={{ fontSize: 30 }}>{formataNumero(removerAspas(JSON.stringify(CalculoKD)))}</Text>
+              <Text style={{ fontSize: 30 , color: CalculoKD > 1 ? 'green' : 'red' }}>{formataNumero(removerAspas(JSON.stringify(CalculoKD)))}</Text>
               <Text style={{ fontSize: 18 }}>Proporção KD</Text>
+            </View>
+
+            <View style={StatsPlayerStyle.proporcao_kd_container}>
+              <Text style={{ fontSize: 30 }}>{formataNumero(removerAspas(JSON.stringify(TaxaHS)))}%</Text>
+              <Text style={{ fontSize: 18 }}>Das vitmas são Headshot</Text>
             </View>
           </View>
 
-          
+          <Image
+              source={require('../../../imagens/csgo-headshot.png')}
+              style={{width: 100, height: 100, marginLeft: 30, alignSelf: 'center'}}
+              />
+
+          <View style={StatsPlayerStyle.view_grafico}>
+            <View style={StatsPlayerStyle.grafico_acerto_disparo}>
+              <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
+              <VictoryPie
+                colorScale={["#FF5555", "#3EFF50"]}
+                data={data_disparos_acertos}
+                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
+                labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
+                responsive={true}
+              />
+              <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '2%' }}><Text style={{ fontWeight: 'bold', fontSize: 18 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos</Text>
+            </View>
+          </View>
+
+
+
 
         </View>
       </ScrollView >
