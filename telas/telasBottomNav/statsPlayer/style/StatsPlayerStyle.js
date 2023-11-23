@@ -71,18 +71,20 @@ const StatsPlayerStyle = StyleSheet.create({
         alignItems: 'center',
         marginTop: '5%'
     },
-    view_grafico:{
+    imagem_headshot:{
+        width: 100, 
+        height: 100, 
+        marginLeft: 30, 
+        alignSelf: 'center'
+    },
+    botao_kills:{
+        marginVertical: '5%',
+        width: '50%',
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: '10%'
-    },
-    grafico_acerto_disparo:{
-        width: 300,
-        height: 300,
-    },
-
+        alignSelf: 'center',
+    }
 })
 
 export default StatsPlayerStyle

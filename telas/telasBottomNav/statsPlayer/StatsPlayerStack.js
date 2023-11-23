@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import StatsPlayer from './StatsPlayer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SteamAPI from '../../../services/SteamAPI';
+import StatsKills from './StatsKills';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const StatsPlayerStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="stats-player" component={StatsPlayer} options={{ title: 'Histrico de ' + accountName || 'Seu Historico' }} />
+            <Stack.Screen name="stats-kills" component={StatsKills} options={{title: 'Detalhamento'}}/>
         </Stack.Navigator>
     )
 }

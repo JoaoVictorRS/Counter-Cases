@@ -5,9 +5,8 @@ import { Image, Linking, ScrollView, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StatsPlayerStyle from './style/StatsPlayerStyle';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie } from "victory-native";
 
-const StatsPlayer = () => {
+const StatsPlayer = ({ navigation }) => {
 
   const [Estatisticas, setEstatisticas] = useState([]);
   const [Kills, setKills] = useState({})
@@ -15,9 +14,7 @@ const StatsPlayer = () => {
   const [CalculoKD, setCalculoKD] = useState({})
   const [TaxaHS, setTaxaHS] = useState({})
   const [HorasJogadas, setHorasJogadas] = useState({})
-  const [TaxaAcerto, setTaxaAcerto] = useState({})
   const [Disparos, setDisparos] = useState({})
-  const [Acertos, setAcertos] = useState({})
   const [KillsArmas, setKillsArmas] = useState([])
 
   //Usuario steam
@@ -44,11 +41,9 @@ const StatsPlayer = () => {
         setKills(estats[0].value)
         setDeaths(estats[1].value)
         setDisparos(estats[47].value)
-        setAcertos(estats[46].value)
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
         setTaxaHS(((estats[25].value / estats[0].value) * 100).toFixed(2))
         setHorasJogadas((estats[2].value / 3600).toFixed(2))
-        setTaxaAcerto(((estats[46].value / estats[47].value) * 100).toFixed(2))
         setKillsArmas(estats.filter(stat => stat.name.includes('total_kills_')
           && stat.name !== 'total_kills_headshot'
           && stat.name !== 'total_kills_enemy_weapon'
@@ -77,17 +72,6 @@ const StatsPlayer = () => {
   const handleOpenURL = () => {
     Linking.openURL(AccountURL);
   };
-
-
-
-  //Sessão dos graficos
-  const data_disparos_acertos = [
-    { x: "Disparos", y: Disparos },
-    { x: "Acertos", y: Acertos }
-  ]
-
-  const data_kills = KillsArmas;
-  data_kills.sort((a, b) => a.value - b.value);
 
   console.log(Estatisticas)
 
@@ -149,63 +133,17 @@ const StatsPlayer = () => {
 
             <View style={StatsPlayerStyle.proporcao_kd_container}>
               <Text style={{ fontSize: 30 }}>{formataNumero(removerAspas(JSON.stringify(TaxaHS)))}%</Text>
-              <Text style={{ fontSize: 18 }}>Das vitmas são Headshot</Text>
+              <Text style={{ fontSize: 18 }}>Das vitmas são Headshot!</Text>
             </View>
           </View>
 
           <Image
             source={require('../../../imagens/csgo-headshot.png')}
-            style={{ width: 100, height: 100, marginLeft: 30, alignSelf: 'center' }}
+            style={StatsPlayerStyle.imagem_headshot}
           />
-
-          <View style={StatsPlayerStyle.view_grafico}>
-            <View style={StatsPlayerStyle.grafico_acerto_disparo}>
-              <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
-              <VictoryPie
-                colorScale={["#FF5555", "#3EFF50"]}
-                data={data_disparos_acertos}
-                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
-                labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
-                responsive={true}
-              />
-              <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '2%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
-              </Text>
-            </View>
+          <View style={StatsPlayerStyle.botao_kills}>
+            <Button mode='contained' onPress={() => navigation.push('stats-kills')}>Detalhamento de Combate</Button>
           </View>
-
-
-
-          <View>
-            <Text style={{ fontSize: 18, textAlign: 'center', marginBottom: 10 }}>Gráfico de Kills por Arma</Text>
-
-            <VictoryChart domainPadding={{ x: 10 }} height={800}>
-              <VictoryAxis
-                dependentAxis
-                tickFormat={(tick) => formataNumero(tick)} // Formatando os ticks do eixo y
-              />
-              <VictoryAxis
-                tickFormat={(tick) => tick}
-                style={{
-                  tickLabels: { fontSize: 12, textAnchor: 'end' }, // Estilizando as labels do eixo x
-                }}
-              />
-              <VictoryBar
-                data={data_kills}
-                x="name"
-                y="value"
-                horizontal
-                labels={({ datum }) => formataNumero(datum.value)} // Exibindo o valor de cada barra
-                labelComponent={<VictoryLabel dx={22} textAnchor="middle" />} // Ajustando a posição dos rótulos
-                style={{
-                  data: { fill: '#008080' } // Cor das barras
-                }}
-              />
-            </VictoryChart>
-          </View>
-
-
-
         </View>
       </ScrollView >
     </>
