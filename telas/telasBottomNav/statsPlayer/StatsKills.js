@@ -67,6 +67,42 @@ const StatsKills = () => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
+  //Imagens das armas com base no nome
+  const imagensArmas = {
+    AK47: require('../../../imagens/rifles/CS2_AK-47_Inventory.webp'),
+    AWP: require('../../../imagens/sniper/CS2_AWP_Inventory.webp'),
+    M4A1: require('../../../imagens/rifles/CS2_M4A4_Inventory.webp'),
+    HKP2000: require('../../../imagens/pistols/CS2_USP-S_Inventory.webp'),
+    DEAGLE: require('../../../imagens/pistols/CS2_Desert_Eagle_Inventory.webp'),
+    UMP45: require('../../../imagens/smg/CS2_UMP-45_Inventory.webp'),
+    GLOCK: require('../../../imagens/pistols/CS2_Glock-18_Inventory.webp'),
+    MP9: require('../../../imagens/smg/CS2_MP9_Inventory.webp'),
+    SSG08: require('../../../imagens/sniper/CS2_SSG_08_Inventory.webp'),
+    NOVA: require('../../../imagens/shotguns/CS2_Nova_Inventory.webp'),
+    P25: require('../../../imagens/pistols/CS2_P250_Inventory.webp'),
+    P90: require('../../../imagens/smg/CS2_P90_Inventory.webp'),
+    MAC10: require('../../../imagens/smg/CS2_MAC-10_Inventory.webp'),
+    FAMAS: require('../../../imagens/rifles/CS2_FAMAS_Inventory.webp'),
+    MP7: require('../../../imagens/smg/CS2_MP7_Inventory.webp'),
+    KNIFE: require('../../../imagens/CS2_CT_knife.webp'),
+    FIVESEVEN: require('../../../imagens/pistols/CS2_Five-SeveN_Inventory.webp'),
+    TEC9: require('../../../imagens/pistols/CS2_Tec-9_Inventory.webp'),
+    AUG: require('../../../imagens/rifles/CS2_AUG_Inventory.webp'),
+    GALILAR: require('../../../imagens/rifles/CS2_Galil_AR_Inventory.webp'),
+    XM1014: require('../../../imagens/shotguns/CS2_XM1014_Inventory.webp'),
+    BIZON: require('../../../imagens/smg/CS2_PP-Bizon_Inventory.webp'),
+    SG556: require('../../../imagens/rifles/CS2_SG_553_Inventory.webp'),
+    NEGEV: require('../../../imagens/machine_gun/CS2_Negev_Inventory.webp'),
+    M249: require('../../../imagens/machine_gun/CS2_M249_Inventory.webp'),
+    MAG7: require('../../../imagens/shotguns/CS2_MAG-7_Inventory.webp'),
+    SAWEDOFF: require('../../../imagens/shotguns/CS2_Sawed-Off_Inventory.webp'),
+    ELITE: require('../../../imagens/pistols/CS2_Dual_Berettas_Inventory.webp'),
+    G3SG1: require('../../../imagens/sniper/CS2_G3SG1_Inventory.webp'),
+    SCAR20: require('../../../imagens/sniper/CS2_SCAR-20_Inventory.webp'),
+    HEGRANADE: require('../../../imagens/Hegrenadehud_csgo.webp'),
+    MOLOTOV: require('../../../imagens/Molotovhud.webp'),
+    TASER: require('../../../imagens/CS2Taserhud.webp'),
+  };
 
   //Sessão dos graficos
 
@@ -80,6 +116,8 @@ const StatsKills = () => {
   const data_kills = KillsArmas
   // Ordenar os dados de total_kills de forma crescente
   data_kills.sort((a, b) => a.value - b.value);
+
+  console.log(KillsArmas)
 
   return (
     <>
@@ -127,19 +165,41 @@ const StatsKills = () => {
                 labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
                 labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
               />
-              <Text style={{ fontSize: 18, textAlign: 'center', marginTop: '2%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '5%' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
               </Text>
             </View>
           </View>
 
-          <View>
-            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '20%' }}>Arma mais usada</Text>
-            <Text>{JSON.stringify(ArmaMaisUsada)}</Text>
+
+          <View style={StatsKillsStyle.proporcao_kd_container}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Arma mais usada</Text>
+
+            {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
+            {ArmaMaisUsada.name && imagensArmas[ArmaMaisUsada.name] ? (
+              <Image
+                source={imagensArmas[ArmaMaisUsada.name]}
+                style={StatsKillsStyle.imagem_arma_mais_usada}
+              />
+            ) : (
+              <Text>Nenhuma imagem disponível para esta arma</Text>
+            )
+            }
+
+            {ArmaMaisUsada.name && imagensArmas[ArmaMaisUsada.name] ? (
+              <Text style={{ fontSize: 18 }}>Sua arma favorita é a
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}> {removerAspas(JSON.stringify(ArmaMaisUsada.name))}</Text> com <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{formataNumero(JSON.stringify(ArmaMaisUsada.value))}</Text> kills
+              </Text>
+            ) : (
+              <></>
+            )
+            }
+            {/* Meu deus que horror */}
           </View>
 
+
           <View>
-            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '20%' }}>Vitmas por Arma</Text>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '10%' }}>Vitmas por Arma</Text>
 
             <VictoryChart domainPadding={{ x: 10 }} height={800}>
               <VictoryAxis
@@ -166,11 +226,12 @@ const StatsKills = () => {
             </VictoryChart>
           </View>
 
-
-          <Image
-            source={require('../../../imagens/ct-team.png')}
-            style={{ width: 200, height: 200, resizeMode: 'contain' }}
-          />
+          <View style={StatsKillsStyle.view_imagem_final_tela}>
+            <Image
+              source={require('../../../imagens/ct-team.png')}
+              style={StatsKillsStyle.imagem_final_tela}
+            />
+          </View>
 
         </View>
       </ScrollView >
