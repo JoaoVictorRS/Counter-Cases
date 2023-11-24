@@ -58,7 +58,22 @@ const StatsKillsStyle = StyleSheet.create({
     imagem_final_tela:{
         width: 400, 
         height: 300, 
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        marginTop: '30%'
+    },
+    view_arma_mais_usada:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '2%'
+    },
+    view_arma_mais_disparada:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+
     }
 
 })

@@ -18,6 +18,8 @@ const StatsKills = () => {
   const [Acertos, setAcertos] = useState({})
   const [KillsArmas, setKillsArmas] = useState([])
   const [ArmaMaisUsada, setArmaMaisUsada] = useState({})
+  const [DisparosArmas, setDisparosArmas] = useState({})
+  const [ArmaMaisDisparada, setArmaMaisDisparada] = useState({})
 
   useEffect(() => {
 
@@ -51,6 +53,23 @@ const StatsKills = () => {
         if (killsPorArma.length > 0) {
           const killsOrdenadas = [...killsPorArma].sort((a, b) => b.value - a.value);
           setArmaMaisUsada(killsOrdenadas[0]);
+        }
+
+
+        // Filtra as os disparos similar ao codigo de cima
+        const DisparosPorArma = estats.filter(stat => stat.name.includes('total_shots_')
+          && stat.name !== 'total_shots_hit'
+          && stat.name !== 'total_shots_fired'
+        ).map(stat => ({
+          name: stat.name.replace('total_shots_', '').toUpperCase(),
+          value: stat.value
+        }));
+        setDisparosArmas(DisparosPorArma);
+
+        // Encontra a arma com mais disparos
+        if (DisparosPorArma.length > 0) {
+          const disparosOrdenados = [...DisparosPorArma].sort((a, b) => b.value - a.value);
+          setArmaMaisDisparada(disparosOrdenados[0]);
         }
 
       })
@@ -117,7 +136,6 @@ const StatsKills = () => {
   // Ordenar os dados de total_kills de forma crescente
   data_kills.sort((a, b) => a.value - b.value);
 
-  console.log(KillsArmas)
 
   return (
     <>
@@ -153,27 +171,12 @@ const StatsKills = () => {
 
           <Image
             source={require('../../../imagens/csgo-headshot.png')}
-            style={{ width: 100, height: 100, marginLeft: 30, alignSelf: 'center' }}
+            style={{ width: 100, height: 100, marginLeft: 30, alignSelf: 'center', marginTop: '5%' }}
           />
 
-          <View style={StatsKillsStyle.view_grafico}>
-            <View style={StatsKillsStyle.grafico_acerto_disparo}>
-              <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
-              <VictoryPie
-                colorScale={["#FF5555", "#3EFF50"]}
-                data={data_disparos_acertos}
-                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
-                labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
-              />
-              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '5%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
-              </Text>
-            </View>
-          </View>
 
-
-          <View style={StatsKillsStyle.proporcao_kd_container}>
-            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Arma mais usada</Text>
+          <View style={StatsKillsStyle.view_arma_mais_usada}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Arma mais usada</Text>
 
             {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
             {ArmaMaisUsada.name && imagensArmas[ArmaMaisUsada.name] ? (
@@ -224,6 +227,48 @@ const StatsKills = () => {
                 }}
               />
             </VictoryChart>
+          </View>
+
+
+
+          <View style={StatsKillsStyle.view_arma_mais_disparada}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Arma mais disparada</Text>
+
+            {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
+            {ArmaMaisDisparada.name && imagensArmas[ArmaMaisDisparada.name] ? (
+              <Image
+                source={imagensArmas[ArmaMaisDisparada.name]}
+                style={StatsKillsStyle.imagem_arma_mais_usada}
+              />
+            ) : (
+              <Text>Nenhuma imagem disponível para esta arma</Text>
+            )
+            }
+
+            {ArmaMaisDisparada.name && imagensArmas[ArmaMaisDisparada.name] ? (
+              <Text style={{ fontSize: 18 }}>Ja foram realizados
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}> {formataNumero(JSON.stringify(ArmaMaisDisparada.value))}</Text> disparos com a <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{removerAspas(JSON.stringify(ArmaMaisDisparada.name))}</Text>
+              </Text>
+            ) : (
+              <></>
+            )
+            }
+            {/* Meu deus que horror */}
+          </View>
+
+          <View style={StatsKillsStyle.view_grafico}>
+            <View style={StatsKillsStyle.grafico_acerto_disparo}>
+              <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
+              <VictoryPie
+                colorScale={["#FF5555", "#3EFF50"]}
+                data={data_disparos_acertos}
+                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
+                labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
+              />
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '5%' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
+              </Text>
+            </View>
           </View>
 
           <View style={StatsKillsStyle.view_imagem_final_tela}>
