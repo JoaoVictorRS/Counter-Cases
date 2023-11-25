@@ -17,9 +17,8 @@ const StatsPlayer = ({ navigation }) => {
   const [KillsArmas, setKillsArmas] = useState([])
   const [ArmaMaisUsada, setArmaMaisUsada] = useState({})
   const [TotalVitorias, setTotalVitorias] = useState({})
-  const [BombasPlantadas, setBombasPlantadas] = useState({})
-  const [BombasDefusadas, setBombasDefusadas] = useState({})
   const [MapaMaisVitorias, setMapaMaisVitorias] = useState({})
+  const [TotalMVP, setTotalMVP] = useState({})
 
   //Usuario steam
   const [AccountIcon, setAccountIcon] = useState([])
@@ -47,8 +46,7 @@ const StatsPlayer = ({ navigation }) => {
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
         setHorasJogadas((estats[2].value / 3600).toFixed(2))
         setTotalVitorias(estats[5].value)
-        setBombasPlantadas(estats[3].value)
-        setBombasDefusadas(estats[4].value)
+        setTotalMVP(estats[102].value)
 
         // Este bloco filtra os registros para apenas os 'total_wins_(nome do mapa)' sejam armazenados na constante
         const mapaComMaisVitorias = estats.filter(stat => stat.name.includes('total_wins_map_')
@@ -160,7 +158,6 @@ const StatsPlayer = ({ navigation }) => {
   }
 
   console.log(Estatisticas)
-  console.log(MapaMaisVitorias)
 
   return (
     <>
@@ -221,8 +218,8 @@ const StatsPlayer = ({ navigation }) => {
 
 
 
-          <View style={StatsKillsStyle.proporcao_kd_container}>
-            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Arma mais usada</Text>
+          <View style={StatsPlayerStyle.view_arma_mais_usada}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Arma mais usada</Text>
 
             {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
             {ArmaMaisUsada.name && imagensArmas[ArmaMaisUsada.name] ? (
@@ -246,40 +243,37 @@ const StatsPlayer = ({ navigation }) => {
             {/* Meu deus que horror */}
           </View>
           <View style={StatsPlayerStyle.botao_kills}>
-            <Button mode='contained' onPress={() => navigation.push('stats-kills')}>Detalhamento de Combate</Button>
+            <Button mode='contained' onPress={() => navigation.push('stats-kills')}>Detalhes de Combate</Button>
           </View>
 
-          <Divider />
 
-          <View>
+
+          <Divider style={{ marginHorizontal: '5%' }} />
+
+
+
+          <View style={StatsPlayerStyle.view_vitorias_mvp}>
             <View style={StatsPlayerStyle.view_vitorias}>
               <Text style={{ fontSize: 25 }}>Total de Vitorias</Text>
               <Text style={{ fontSize: 35 }}>{formataNumero(JSON.stringify(TotalVitorias))}</Text>
             </View>
 
-            <View style={StatsPlayerStyle.view_defuse_plant}>
-              <View>
-                <Text style={{ fontSize: 40, color: '#1e3747', textAlign: 'center' }}>{formataNumero(JSON.stringify(BombasDefusadas))}</Text>
-                <Text style={{ textAlign: 'center', fontSize: 18 }}>Bombas Defusadas</Text>
-              </View>
+            <Divider style={{ marginHorizontal: '30%' }} />
 
-              <View style={StatsPlayerStyle.kill_death_linha}></View>
-
-              <View>
-                <Text style={{ fontSize: 40, color: '#b0a06a', textAlign: 'center' }}>{formataNumero(JSON.stringify(BombasPlantadas))}</Text>
-                <Text style={{ textAlign: 'center', fontSize: 18 }}>Bombas Armadas</Text>
-              </View>
+            <View style={StatsPlayerStyle.view_mvp}>
+              <Text style={{ fontSize: 25 }}>{formataNumero(JSON.stringify(TotalMVP))}</Text>
+              <Text style={{ fontSize: 20 }}><MaterialCommunityIcons name="star" size={20} color="black" /> Vezes que foi MVP <MaterialCommunityIcons name="star" size={20} color="black" /></Text>
             </View>
           </View>
 
-          <View style={StatsKillsStyle.proporcao_kd_container}>
-            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Seu melhor mapa</Text>
+          <View style={StatsPlayerStyle.view_mapa_mais_jogado}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Seu melhor mapa</Text>
 
             {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
             {MapaMaisVitorias.name && imagensMapas[MapaMaisVitorias.name] ? (
               <Image
                 source={imagensMapas[MapaMaisVitorias.name]}
-                style={StatsKillsStyle.imagem_arma_mais_usada}
+                style={StatsPlayerStyle.imagem_mapa_mais_jogado}
               />
             ) : (
               <Text>Nenhuma imagem disponível para esta arma</Text>
@@ -295,6 +289,10 @@ const StatsPlayer = ({ navigation }) => {
             )
             }
             {/* Meu deus que horror */}
+          </View>
+
+          <View style={StatsPlayerStyle.botao_kills}>
+            <Button mode='contained' onPress={() => navigation.push('stats-partidas')}>Detalhes das Partidas</Button>
           </View>
 
         </View>

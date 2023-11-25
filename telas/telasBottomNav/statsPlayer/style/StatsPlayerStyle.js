@@ -47,7 +47,7 @@ const StatsPlayerStyle = StyleSheet.create({
     principal_container: {
         flex: 1
     },
-    horas_container:{
+    horas_container: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
@@ -71,32 +71,62 @@ const StatsPlayerStyle = StyleSheet.create({
         alignItems: 'center',
         marginTop: '5%'
     },
-    imagem_headshot:{
-        width: 100, 
-        height: 100, 
-        marginLeft: 30, 
+    imagem_headshot: {
+        width: 100,
+        height: 100,
+        marginLeft: 30,
         alignSelf: 'center'
     },
-    botao_kills:{
-        marginTop: '12%',
+    botao_kills: {
         width: '50%',
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignSelf: 'center',
+        marginTop: '5%'
     },
-    view_vitorias:{
+    view_vitorias_mvp: {
+        marginVertical: '13%'
+    },
+    view_vitorias: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: '10%',
         marginBottom: '5%'
     },
-    view_defuse_plant:{
+    view_defuse_plant: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly'
+    },
+    imagem_mapa_mais_jogado: {
+        width: 300,
+        height: 200,
+        resizeMode: 'contain',
+    },
+    view_arma_mais_usada: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '20%'
+    },
+    view_mapa_mais_jogado: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: '5%',
+        marginTop: '5%'
+    },
+    view_mvp: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: '5%',
+        marginTop: '4%'
     }
 })
 

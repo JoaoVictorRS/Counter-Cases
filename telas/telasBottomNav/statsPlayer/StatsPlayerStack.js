@@ -4,6 +4,7 @@ import StatsPlayer from './StatsPlayer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SteamAPI from '../../../services/SteamAPI';
 import StatsKills from './StatsKills';
+import StatsPartidas from './StatsPartidas';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +28,8 @@ const StatsPlayerStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="stats-player" component={StatsPlayer} options={{ title: 'Histrico de ' + accountName || 'Seu Historico' }} />
-            <Stack.Screen name="stats-kills" component={StatsKills} options={{title: 'Detalhamento'}}/>
+            <Stack.Screen name="stats-kills" component={StatsKills} options={{title: 'Detalhes de Combate'}}/>
+            <Stack.Screen name="stats-partidas" component={StatsPartidas} options={{title: 'Detalhes de Partidas'}}/>
         </Stack.Navigator>
     )
 }
