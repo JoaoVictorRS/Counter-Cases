@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Text } from 'react-native-paper'
+import { Button, Divider, Text } from 'react-native-paper'
 import SteamAPI from '../../../services/SteamAPI';
 import { Image, Linking, ScrollView, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,10 +13,13 @@ const StatsPlayer = ({ navigation }) => {
   const [Kills, setKills] = useState({})
   const [Deaths, setDeaths] = useState({})
   const [CalculoKD, setCalculoKD] = useState({})
-  const [TaxaHS, setTaxaHS] = useState({})
   const [HorasJogadas, setHorasJogadas] = useState({})
   const [KillsArmas, setKillsArmas] = useState([])
   const [ArmaMaisUsada, setArmaMaisUsada] = useState({})
+  const [TotalVitorias, setTotalVitorias] = useState({})
+  const [BombasPlantadas, setBombasPlantadas] = useState({})
+  const [BombasDefusadas, setBombasDefusadas] = useState({})
+  const [MapaMaisVitorias, setMapaMaisVitorias] = useState({})
 
   //Usuario steam
   const [AccountIcon, setAccountIcon] = useState([])
@@ -42,10 +45,27 @@ const StatsPlayer = ({ navigation }) => {
         setKills(estats[0].value)
         setDeaths(estats[1].value)
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
-        setTaxaHS(((estats[25].value / estats[0].value) * 100).toFixed(2))
         setHorasJogadas((estats[2].value / 3600).toFixed(2))
+        setTotalVitorias(estats[5].value)
+        setBombasPlantadas(estats[3].value)
+        setBombasDefusadas(estats[4].value)
 
-        // Este bloco filtra os registros para apenas os 'total_kills_(nome da arma_)' sejam armazenados na constante
+        // Este bloco filtra os registros para apenas os 'total_wins_(nome do mapa)' sejam armazenados na constante
+        const mapaComMaisVitorias = estats.filter(stat => stat.name.includes('total_wins_map_')
+          && stat.name !== 'total_wins_pistolround'
+        ).map(stat => ({
+          name: stat.name.replace('total_wins_map_', '').toUpperCase(),
+          value: stat.value
+        }));
+
+        // Esse encontra a arma com mais kills
+        if (mapaComMaisVitorias.length > 0) {
+          const mapasOrdenados = [...mapaComMaisVitorias].sort((a, b) => b.value - a.value);
+          setMapaMaisVitorias(mapasOrdenados[0]);
+        }
+
+
+        // Este bloco filtra os registros para apenas os 'total_kills_(nome da arma)' sejam armazenados na constante
         const killsPorArma = estats.filter(stat => stat.name.includes('total_kills_')
           && stat.name !== 'total_kills_headshot'
           && stat.name !== 'total_kills_enemy_weapon'
@@ -63,6 +83,8 @@ const StatsPlayer = ({ navigation }) => {
           const killsOrdenadas = [...killsPorArma].sort((a, b) => b.value - a.value);
           setArmaMaisUsada(killsOrdenadas[0]);
         }
+
+
       })
 
     })
@@ -119,7 +141,26 @@ const StatsPlayer = ({ navigation }) => {
     TASER: require('../../../imagens/CS2Taserhud.webp'),
   };
 
+  //Imagens dos mapas com base no nome
+  const imagensMapas = {
+    CS_ASSAULT: require('../../../imagens/maps/Cs_assault_go.webp'),
+    CS_ITALY: require('../../../imagens/maps/Cs2_italy.webp'),
+    CS_OFFICE: require('../../../imagens/maps/Cs2_office.webp'),
+    DE_CBBLE: require('../../../imagens/maps/De_cbble_s2.webp'),
+    DE_DUST2: require('../../../imagens/maps/Cs2_dust2.webp'),
+    DE_DUST: require('../../../imagens/maps/Csgo-de-dust.webp'),
+    DE_INFERNO: require('../../../imagens/maps/Cs2_inferno_remake.webp'),
+    DE_NUKE: require('../../../imagens/maps/De_nuke_cs2.webp'),
+    DE_TRAIN: require('../../../imagens/maps/De_train_cs2.webp'),
+    DE_BANK: require('../../../imagens/maps/Csgo-de-bank.webp'),
+    DE_VERTIGO: require('../../../imagens/maps/De_vertigo_cs2.webp'),
+    DE_LAKE: require('../../../imagens/maps/De_lake_cs2.webp'),
+    DE_SAFEHOUSE: require('../../../imagens/maps/Csgo-de-safehouse.webp'),
+    DE_SHORTTRAIN: require('../../../imagens/maps/De_train_cs2.webp')
+  }
+
   console.log(Estatisticas)
+  console.log(MapaMaisVitorias)
 
   return (
     <>
@@ -160,14 +201,14 @@ const StatsPlayer = ({ navigation }) => {
           <View>
             <View style={StatsPlayerStyle.kill_death_container}>
               <View>
-                <Text style={{ fontSize: 40, color: '#44CD28' }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
+                <Text style={{ fontSize: 40, color: 'green' }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Vitmas</Text>
               </View>
 
               <View style={StatsPlayerStyle.kill_death_linha}></View>
 
               <View>
-                <Text style={{ fontSize: 40, color: '#C82C2C' }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
+                <Text style={{ fontSize: 40, color: 'red' }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Mortes</Text>
               </View>
             </View>
@@ -176,11 +217,9 @@ const StatsPlayer = ({ navigation }) => {
               <Text style={{ fontSize: 30, color: CalculoKD > 1 ? 'green' : 'red' }}>{formataNumero(removerAspas(JSON.stringify(CalculoKD)))}</Text>
               <Text style={{ fontSize: 18 }}>Proporção KD</Text>
             </View>
-
-            
           </View>
 
-        
+
 
           <View style={StatsKillsStyle.proporcao_kd_container}>
             <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Arma mais usada</Text>
@@ -209,6 +248,55 @@ const StatsPlayer = ({ navigation }) => {
           <View style={StatsPlayerStyle.botao_kills}>
             <Button mode='contained' onPress={() => navigation.push('stats-kills')}>Detalhamento de Combate</Button>
           </View>
+
+          <Divider />
+
+          <View>
+            <View style={StatsPlayerStyle.view_vitorias}>
+              <Text style={{ fontSize: 25 }}>Total de Vitorias</Text>
+              <Text style={{ fontSize: 35 }}>{formataNumero(JSON.stringify(TotalVitorias))}</Text>
+            </View>
+
+            <View style={StatsPlayerStyle.view_defuse_plant}>
+              <View>
+                <Text style={{ fontSize: 40, color: '#1e3747', textAlign: 'center' }}>{formataNumero(JSON.stringify(BombasDefusadas))}</Text>
+                <Text style={{ textAlign: 'center', fontSize: 18 }}>Bombas Defusadas</Text>
+              </View>
+
+              <View style={StatsPlayerStyle.kill_death_linha}></View>
+
+              <View>
+                <Text style={{ fontSize: 40, color: '#b0a06a', textAlign: 'center' }}>{formataNumero(JSON.stringify(BombasPlantadas))}</Text>
+                <Text style={{ textAlign: 'center', fontSize: 18 }}>Bombas Armadas</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={StatsKillsStyle.proporcao_kd_container}>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginTop: '15%' }}>Seu melhor mapa</Text>
+
+            {/* A atrocidade cometida abaixo serve para não dar problema quando o dado chegar dps do carregamento */}
+            {MapaMaisVitorias.name && imagensMapas[MapaMaisVitorias.name] ? (
+              <Image
+                source={imagensMapas[MapaMaisVitorias.name]}
+                style={StatsKillsStyle.imagem_arma_mais_usada}
+              />
+            ) : (
+              <Text>Nenhuma imagem disponível para esta arma</Text>
+            )
+            }
+
+            {MapaMaisVitorias.name && imagensMapas[MapaMaisVitorias.name] ? (
+              <Text style={{ fontSize: 18 }}>Seu mapa com mais vitorias é
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}> {removerAspas(JSON.stringify(MapaMaisVitorias.name))}</Text>
+              </Text>
+            ) : (
+              <></>
+            )
+            }
+            {/* Meu deus que horror */}
+          </View>
+
         </View>
       </ScrollView >
     </>

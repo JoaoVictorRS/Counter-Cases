@@ -5,6 +5,7 @@ import { Image, ScrollView, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie } from "victory-native";
 import StatsKillsStyle from './style/StatsKillsStyle';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const StatsKills = () => {
 
@@ -20,6 +21,7 @@ const StatsKills = () => {
   const [ArmaMaisUsada, setArmaMaisUsada] = useState({})
   const [DisparosArmas, setDisparosArmas] = useState({})
   const [ArmaMaisDisparada, setArmaMaisDisparada] = useState({})
+  const [DanoTotal, setDanoTotal] = useState({})
 
   useEffect(() => {
 
@@ -35,6 +37,7 @@ const StatsKills = () => {
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
         setTaxaHS(((estats[25].value / estats[0].value) * 100).toFixed(2))
         setTaxaAcerto(((estats[46].value / estats[47].value) * 100).toFixed(2))
+        setDanoTotal(estats[6].value)
 
         // Este bloco filtra os registros para apenas os 'total_kills_(nome da arma_)' sejam armazenados na constante
         const killsPorArma = estats.filter(stat => stat.name.includes('total_kills_')
@@ -146,14 +149,14 @@ const StatsKills = () => {
           <View>
             <View style={StatsKillsStyle.kill_death_container}>
               <View>
-                <Text style={{ fontSize: 40, color: '#44CD28' }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
+                <Text style={{ fontSize: 40, color: 'green' }}>{formataNumero(removerAspas(JSON.stringify(Kills)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Vitmas</Text>
               </View>
 
               <View style={StatsKillsStyle.kill_death_linha}></View>
 
               <View>
-                <Text style={{ fontSize: 40, color: '#C82C2C' }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
+                <Text style={{ fontSize: 40, color: 'red' }}>{formataNumero(removerAspas(JSON.stringify(Deaths)))}</Text>
                 <Text style={{ textAlign: 'center', fontSize: 18 }}>Mortes</Text>
               </View>
             </View>
@@ -161,6 +164,11 @@ const StatsKills = () => {
             <View style={StatsKillsStyle.proporcao_kd_container}>
               <Text style={{ fontSize: 30, color: CalculoKD > 1 ? 'green' : 'red' }}>{formataNumero(removerAspas(JSON.stringify(CalculoKD)))}</Text>
               <Text style={{ fontSize: 18 }}>Proporção KD</Text>
+            </View>
+
+            <View style={StatsKillsStyle.proporcao_kd_container}>
+              <Text style={{ fontSize: 30 }}><Icon name="plus-thick" size={25} color="#FF5733" />{formataNumero(JSON.stringify(DanoTotal))}</Text>
+              <Text style={{ fontSize: 18 }}>Total de dano causado</Text>
             </View>
 
             <View style={StatsKillsStyle.proporcao_kd_container}>
@@ -199,6 +207,7 @@ const StatsKills = () => {
             }
             {/* Meu deus que horror */}
           </View>
+
 
 
           <View>

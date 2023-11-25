@@ -78,12 +78,25 @@ const StatsPlayerStyle = StyleSheet.create({
         alignSelf: 'center'
     },
     botao_kills:{
-        marginVertical: '5%',
+        marginTop: '12%',
         width: '50%',
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignSelf: 'center',
+    },
+    view_vitorias:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '10%',
+        marginBottom: '5%'
+    },
+    view_defuse_plant:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
     }
 })
 
