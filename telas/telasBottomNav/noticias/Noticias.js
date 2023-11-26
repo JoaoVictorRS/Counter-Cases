@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
 import SteamAPI from '../../../services/SteamAPI'
-import { Text } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
 import { useEffect } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
 const Noticias = () => {
 
@@ -19,12 +19,13 @@ const Noticias = () => {
     console.log(noticia)
     return (
         <>
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 {noticia.map(item => (
-                    <View key={item.gid}>
-                        <Text>{item.title}</Text>
-                        <Text>{item.contents}</Text>
-                        <Text>{item.author}</Text>
+                    <View key={item.gid} style={styles.caixanot}>
+                        <Text style={styles.titulo}>{item.title}</Text>
+                        <Text style={styles.texto}>{item.contents}</Text>
+                        <Text style={styles.autor}>{item.author}</Text>
+                        <Button style={styles.btt}>Veja a Noticia Completa</Button>
                     </View>
                 ))}
             </ScrollView>
@@ -33,3 +34,44 @@ const Noticias = () => {
 }
 
 export default Noticias
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#082e5e'
+    },
+    caixanot: {
+        margin: 0,
+        borderWidth: 1,
+        borderColor: "#fcfafa",
+        borderStyle: "solid",
+        padding: 10
+    },
+    titulo: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#616161",
+       
+    },
+    texto: {
+        color: "#a19f9f",
+        paddingTop: 10,
+        fontSize: 16,
+         fontStyle: "italic"
+    },
+    autor: {
+        paddingTop: 5,
+        fontSize: 13,
+        color: "#616161",
+    },
+    btt: {
+        alignSelf: "center",
+        width: 250,
+        height: 40,
+        backgroundColor: "#022f78",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#fcfafa",
+        borderStyle: "solid",
+    }
+
+});
