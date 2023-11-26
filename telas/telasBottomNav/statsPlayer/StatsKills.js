@@ -266,18 +266,21 @@ const StatsKills = () => {
           </View>
 
           <View style={StatsKillsStyle.view_grafico}>
-            <View style={StatsKillsStyle.grafico_acerto_disparo}>
               <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
               <VictoryPie
-                colorScale={["#FF5555", "#3EFF50"]}
                 data={data_disparos_acertos}
-                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`}
-                labelComponent={<VictoryLabel style={{ fontSize: 26 }} />}
+                colorScale={['green', 'red']} // Escolha as cores para cada fatia do gráfico
+                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`} // Exibe o valor de cada fatia
+                radius={100} // Define o raio do gráfico de pizza
+                innerRadius={50} // Define o raio interno do gráfico de pizza
+                width={300}
+                height={300}
+                style={{ labels: { fontSize: 14, fontWeight: 'bold' } }} // Estilo dos rótulos
+                labelRadius={120}
               />
               <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '5%' }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
               </Text>
-            </View>
           </View>
 
           <View style={StatsKillsStyle.view_imagem_final_tela}>

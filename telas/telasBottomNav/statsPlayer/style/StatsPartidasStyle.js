@@ -31,8 +31,7 @@ const StatsPartidasStyle = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: '5%',
-        marginTop: '5%'
+        marginBottom: '15%',
     },
     view_mvp: {
         flex: 1,
@@ -41,7 +40,29 @@ const StatsPartidasStyle = StyleSheet.create({
         alignItems: 'center',
         marginBottom: '5%',
         marginTop: '4%'
-    }
+    },
+    view_grafico: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '10%',
+        marginBottom: '10%'
+    },
+    grafico_rounds_vitorias: {
+        width: 300,
+        height: 300,
+    },
+    imagem_final_tela: {
+        width: 450,
+        height: 200,
+        resizeMode: 'cover',
+    },
+    view_imagem_final_tela: {
+        alignItems: 'center', 
+        justifyContent: 'flex-end', // Ajuste adicional para alinhamento
+        flex: 1, // Faz a View preencher todo o espaço disponível
+    },
 
 })
 

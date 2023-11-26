@@ -5,6 +5,7 @@ import { Image, ScrollView, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StatsPartidasStyle from './style/StatsPartidasStyle';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryPie } from 'victory-native';
 
 const StatsPartidas = ({ navigation }) => {
 
@@ -18,9 +19,8 @@ const StatsPartidas = ({ navigation }) => {
     const [PistolRound, setPistolRound] = useState({})
     const [TotalRounds, setTotalRounds] = useState({})
     const [ContributionScore, setContriburionScore] = useState({})
-    const [TaxaVitoriaRound, setTaxaVitoriaRound] = useState({})
+    const [VitoriaPorMapa, setVitoriaPorMapa] = useState([])
 
-    //Lembrar de fazer o grafico de taxa de vitorias so pegar rounds e vitorias e fazer o grafico
     useEffect(() => {
 
         AsyncStorage.getItem('usuario').then(usuario => {
@@ -36,7 +36,6 @@ const StatsPartidas = ({ navigation }) => {
                 setPistolRound(estats[27].value)
                 setTotalRounds(estats[48].value)
                 setContriburionScore(estats[133].value)
-                setTaxaVitoriaRound((estats[5].value / estats[27].value))
 
 
                 // Este bloco filtra os registros para apenas os 'total_wins_(nome do mapa)' sejam armazenados na constante
@@ -46,6 +45,7 @@ const StatsPartidas = ({ navigation }) => {
                     name: stat.name.replace('total_wins_map_', '').toUpperCase(),
                     value: stat.value
                 }));
+                setVitoriaPorMapa(mapaComMaisVitorias)
 
                 // Esse encontra a arma com mais kills
                 if (mapaComMaisVitorias.length > 0) {
@@ -67,6 +67,14 @@ const StatsPartidas = ({ navigation }) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
+    // Formata em dolares pois dolar é o padrão no jogo
+    function formatarDinheiro(valor) {
+        return Number(valor).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        });
+    }
+
     //Imagens dos mapas com base no nome
     const imagensMapas = {
         CS_ASSAULT: require('../../../imagens/maps/Cs_assault_go.webp'),
@@ -84,6 +92,17 @@ const StatsPartidas = ({ navigation }) => {
         DE_SAFEHOUSE: require('../../../imagens/maps/Csgo-de-safehouse.webp'),
         DE_SHORTTRAIN: require('../../../imagens/maps/De_train_cs2.webp')
     }
+
+    //GRAFICO DE DISPAROS/ACERTOS
+    const data_rounds_vitorias = [
+        { x: "Vitorias", y: TotalVitorias },
+        { x: "Rounds", y: TotalRounds }
+    ]
+
+    //GRAFICO DE VITORIAS POR MAPA
+    const data_vitorias = VitoriaPorMapa
+    // Ordenar os dados de total_wins de forma crescente
+    data_vitorias.sort((a, b) => a.value - b.value);
 
     console.log(Estatisticas)
 
@@ -116,6 +135,22 @@ const StatsPartidas = ({ navigation }) => {
                             <Text style={{ fontSize: 25 }}>{formataNumero(JSON.stringify(TotalMVP))}</Text>
                             <Text style={{ fontSize: 20 }}><MaterialCommunityIcons name="star" size={20} color="black" /> Vezes que foi MVP <MaterialCommunityIcons name="star" size={20} color="black" /></Text>
                         </View>
+
+                        <View style={StatsPartidasStyle.view_mvp}>
+                            <Text style={{ fontSize: 25, color: 'green' }}>{formatarDinheiro(JSON.stringify(TotalMoney))}</Text>
+                            <Text style={{ fontSize: 20 }}>Total de dinheiro ganho em todas partidas</Text>
+                        </View>
+
+                        <View style={StatsPartidasStyle.view_mvp}>
+                            <Text style={{ fontSize: 25 }}>{formataNumero(JSON.stringify(ContributionScore))}</Text>
+                            <Text style={{ fontSize: 20 }}>Total de pontos de contribuição</Text>
+                        </View>
+
+                        <View style={StatsPartidasStyle.view_mvp}>
+                            <Text style={{ fontSize: 25 }}>{formataNumero(JSON.stringify(PistolRound))}</Text>
+                            <Text style={{ fontSize: 20 }}>Pistol rounds ganhos</Text>
+                            <MaterialCommunityIcons name='pistol' size={30} color={'gray'} />
+                        </View>
                     </View>
 
                     <View style={StatsPartidasStyle.view_mapa_mais_jogado}>
@@ -143,6 +178,55 @@ const StatsPartidas = ({ navigation }) => {
                         {/* Meu deus que horror */}
                     </View>
 
+                    <View style={StatsPartidasStyle.view_grafico}>
+                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Rounds / Vitorias</Text>
+                        <VictoryPie
+                            data={data_rounds_vitorias}
+                            colorScale={['green', 'red']} // Escolha as cores para cada fatia do gráfico
+                            labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`} // Exibe o valor de cada fatia
+                            radius={100} // Define o raio do gráfico de pizza
+                            innerRadius={50} // Define o raio interno do gráfico de pizza
+                            labelRadius={110}
+                            style={{ labels: { fontSize: 14, fontWeight: 'bold' } }} // Estilo dos rótulos
+                        />
+                    </View>
+
+
+
+                    <View>
+                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Vitorias por Arma</Text>
+
+                        <VictoryChart domainPadding={{ x: 10 }} height={800}>
+                            <VictoryAxis
+                                dependentAxis
+                                tickFormat={(tick) => formataNumero(tick)} // Formatando os ticks do eixo y
+                            />
+                            <VictoryAxis
+                                tickFormat={(tick) => tick}
+                                style={{
+                                    tickLabels: { fontSize: 12, textAnchor: 'end' }, // Estilizando as labels do eixo x
+                                }}
+                            />
+                            <VictoryBar
+                                data={data_vitorias}
+                                x="name"
+                                y="value"
+                                horizontal
+                                labels={({ datum }) => formataNumero(datum.value)} // Exibindo o valor de cada barra
+                                labelComponent={<VictoryLabel dx={22} textAnchor="middle" />} // Ajustando a posição dos rótulos
+                                style={{
+                                    data: { fill: '#008080' } // Cor das barras
+                                }}
+                            />
+                        </VictoryChart>
+                    </View>
+
+                    <View style={StatsPartidasStyle.view_imagem_final_tela}>
+                        <Image
+                            source={require('../../../imagens/tr-team.png')}
+                            style={StatsPartidasStyle.imagem_final_tela}
+                        />
+                    </View>
                 </View>
             </ScrollView >
         </>
