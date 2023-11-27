@@ -39,22 +39,22 @@ const ItensCaixa = ({ navigation, route }) => {
           return { ...item, price: { median_price: 'N/A' } };
         }
       });
-  
+
       return Promise.all(pricePromises);
     };
-  
+
     const fetchData = async () => {
       try {
         const [caixaResponse, itensResponse] = await Promise.all([
           CsVercelAPI.get(`items?id=${id}`),
           CsVercelAPI.get(`items?id=${id}`),
         ]);
-  
+
         setCaixa(caixaResponse.data);
         const itemsData = itensResponse.data.contains;
-  
+
         const itemsWithPrices = await fetchItemPrices(itemsData);
-  
+
         setItens(itemsWithPrices);
         setIsLoading(false);
       } catch (error) {
@@ -62,7 +62,7 @@ const ItensCaixa = ({ navigation, route }) => {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
 
     // Iniciar ambas as solicitações à API
@@ -70,25 +70,25 @@ const ItensCaixa = ({ navigation, route }) => {
     const itensPromise = CsVercelAPI.get(`items?id=${id}`);
 
     // Use Promise.all para esperar que ambas as solicitações sejam concluídas
-   // Adicionando uma terceira solicitação para obter os preços das skins
-   const precosPromise = axios.get('http://localhost:3000/ItemPrice?market_hash_name=');
+    // Adicionando uma terceira solicitação para obter os preços das skins
+    const precosPromise = axios.get('http://localhost:3000/ItemPrice?market_hash_name=');
 
-   // Use Promise.all para esperar que todas as solicitações sejam concluídas
-   Promise.all([caixaPromise, itensPromise, precosPromise])
-     .then(([caixaResponse, itensResponse, precosResponse]) => {
-       setCaixa(caixaResponse.data);
-       const itensComPrecos = itensResponse.data.contains.map(item => {
-         const precoItem = precosResponse.data.find(preco => preco.itemId === item.id);
-         return { ...item, price: precoItem ? precoItem.price : null };
-       });
-       setItens(itensComPrecos);
-       setIsLoading(false);
-     })
-     .catch((error) => {
-       console.error("Erro ao buscar dados da API: ", error);
-       setIsLoading(false);
-     });
- }, [route.params.id]);
+    // Use Promise.all para esperar que todas as solicitações sejam concluídas
+    Promise.all([caixaPromise, itensPromise, precosPromise])
+      .then(([caixaResponse, itensResponse, precosResponse]) => {
+        setCaixa(caixaResponse.data);
+        const itensComPrecos = itensResponse.data.contains.map(item => {
+          const precoItem = precosResponse.data.find(preco => preco.itemId === item.id);
+          return { ...item, price: precoItem ? precoItem.price : null };
+        });
+        setItens(itensComPrecos);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados da API: ", error);
+        setIsLoading(false);
+      });
+  }, [route.params.id]);
 
   const getStyleByRarity = (rarity) => {
     if (rarity === 'Mil-Spec Grade') {
@@ -108,35 +108,41 @@ const ItensCaixa = ({ navigation, route }) => {
     <>
 
       <ScrollView style={{ position: 'relative', paddingHorizontal: 10 }} >
-        <View style={{ flex: 1, bottom: 0, right: 0, left: 0,top: '125%', position: 'absolute' }}>
+        <View style={{ flex: 1, bottom: 0, right: 0, left: 0, top: '125%', position: 'absolute' }}>
           {isLoading ? (
-            <Loading />
+            <Loading/>
           ) : (
             <View>
-              {/* Conteúdo principal do seu aplicativo */}
+              <View style={ItensCaixaStyle.header}>
+                <Image source={caixa.image} style={ItensCaixaStyle.imagem} />
+                <Text style={ItensCaixaStyle.caixaName}>{caixa.name}</Text>
+              </View>
+
+              <View style={ItensCaixaStyle.row}>
+                {itens.map(item => (
+                  <LinearGradient style={ItensCaixaStyle.linearMargin} key={item.id} colors={["#848080", "#e1e1e3"]}>
+
+                    <TouchableOpacity style={[ItensCaixaStyle.container, getStyleByRarity(item.rarity)]}>
+                      <Image source={item.image} style={ItensCaixaStyle.skinImage} />
+                      <Text style={ItensCaixaStyle.skinName}>{item.name}</Text>
+                      {item.price && (
+                        <Text style={ItensCaixaStyle.skinPrice}>Preço: <Text style={{color: 'green'}}>{item.price.median_price ? item.price.median_price : item.price.lowest_price}</Text></Text>
+                      )}
+                    </TouchableOpacity>
+
+                  </LinearGradient>
+                ))}
+
+                <LinearGradient style={ItensCaixaStyle.linearMargin} colors={["#848080", "#e1e1e3"]}>
+                  <TouchableOpacity style={[ItensCaixaStyle.container_rare]}>
+                    <Image source={require('../../../imagens/item-raro.png')} style={ItensCaixaStyle.skinImage} />
+                    <Text style={ItensCaixaStyle.skinName}>Rare Special Item</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+
+              </View>
             </View>
           )}
-        </View>
-
-        <View style={ItensCaixaStyle.header}>
-          <Image source={caixa.image} style={ItensCaixaStyle.imagem} />
-          <Text style={ItensCaixaStyle.caixaName}>{caixa.name}</Text>
-        </View>
-
-        <View style={ItensCaixaStyle.row}>
-          {itens.map(item => (
-            <LinearGradient style={ItensCaixaStyle.linearMargin} key={item.id} colors={["#848080", "#e1e1e3"]}>
-
-              <TouchableOpacity style={[ItensCaixaStyle.container, getStyleByRarity(item.rarity)]}>
-                <Image source={item.image} style={ItensCaixaStyle.skinImage} />
-                <Text style={ItensCaixaStyle.skinName}>{item.name}</Text>
-                {item.price && (
-                  <Text style={ItensCaixaStyle.skinPrice}>Preço: {item.price.median_price ? item.price.median_price : item.price.lowest_price}</Text>
-                )}
-              </TouchableOpacity>
-
-            </LinearGradient>
-          ))}
         </View>
       </ScrollView>
     </>

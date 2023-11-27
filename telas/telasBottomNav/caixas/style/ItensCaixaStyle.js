@@ -30,6 +30,13 @@ const ItensCaixaStyle = StyleSheet.create({
         padding: 10,
         borderLeftWidth: 5,
       },
+      container_rare: {
+        width: 130, // Largura do quadrado da skin
+        height: 130, // Altura do quadrado da skin
+        borderColor: 'yellow', // Cor da borda
+        padding: 10,
+        borderLeftWidth: 5,
+      },
       skinImage: {
         width: '100%', 
         height: '70%',

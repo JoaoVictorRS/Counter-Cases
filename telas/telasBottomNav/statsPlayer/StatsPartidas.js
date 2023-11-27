@@ -194,7 +194,7 @@ const StatsPartidas = ({ navigation }) => {
 
 
                     <View>
-                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Vitorias por Arma</Text>
+                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Partidas Finalizadas por Mapa</Text>
 
                         <VictoryChart domainPadding={{ x: 10 }} height={800}>
                             <VictoryAxis

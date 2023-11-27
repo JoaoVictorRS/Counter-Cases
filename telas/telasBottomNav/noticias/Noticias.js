@@ -4,6 +4,7 @@ import SteamAPI from '../../../services/SteamAPI'
 import { Button, Text } from 'react-native-paper'
 import { useEffect } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
+import { Linking } from 'react-native'
 
 const Noticias = () => {
 
@@ -16,6 +17,13 @@ const Noticias = () => {
         })
     }, [])
 
+    // Abre o link da noticia
+    const abrirLinkNoticia = (link) => {
+        if (link) {
+          Linking.openURL(link);
+        }
+      };
+
     console.log(noticia)
     return (
         <>
@@ -24,8 +32,10 @@ const Noticias = () => {
                     <View key={item.gid} style={styles.caixanot}>
                         <Text style={styles.titulo}>{item.title}</Text>
                         <Text style={styles.texto}>{item.contents}</Text>
-                        <Text style={styles.autor}>{item.author}</Text>
-                        <Button style={styles.btt}>Veja a Noticia Completa</Button>
+                        <Text style={styles.autor}>-{item.author}</Text>
+                        <Button style={styles.btt} 
+                        onPress={() => abrirLinkNoticia(item.url)}
+                        ><Text style={{color: 'white'}}>Veja a Noticia Completa</Text></Button>
                     </View>
                 ))}
             </ScrollView>

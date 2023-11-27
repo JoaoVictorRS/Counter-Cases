@@ -269,7 +269,7 @@ const StatsKills = () => {
               <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
               <VictoryPie
                 data={data_disparos_acertos}
-                colorScale={['green', 'red']} // Escolha as cores para cada fatia do gráfico
+                colorScale={['red', 'green']} // Escolha as cores para cada fatia do gráfico
                 labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`} // Exibe o valor de cada fatia
                 radius={100} // Define o raio do gráfico de pizza
                 innerRadius={50} // Define o raio interno do gráfico de pizza
