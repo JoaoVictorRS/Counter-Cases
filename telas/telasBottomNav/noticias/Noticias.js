@@ -24,7 +24,6 @@ const Noticias = () => {
         }
       };
 
-    console.log(noticia)
     return (
         <>
             <ScrollView style={styles.container}>

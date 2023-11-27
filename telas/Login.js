@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Formik } from 'formik';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper'
 import ValidatorLogin from './ValidatorLogin';
@@ -10,59 +10,24 @@ import Modal from 'react-native-modal';
 
 const Login = ({ navigation, route }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [usuario, setUsuario] = useState('');
 
-  let usuario = {
-    usuario: '76561198176113609'
-  }
-
-  function salvar(dados) {
-
+  useEffect(() => {
     AsyncStorage.getItem('usuario').then(resultado => {
-
-      const usuario = JSON.parse(resultado) || 0
-
-      if (usuario.length > 0) {
-        console.log('Há mais de um índice, não é permitido.');
-        return; // Não permita salvar se houver mais de um índice
+      if (resultado) {
+        setUsuario(resultado);
       }
+    });
+  }, []);
 
-      AsyncStorage.setItem('usuario', dados.usuario)
-
-      navigation.replace('principal-bottom-nav')
-
-    })
-
+  async function salvar(dados) {
+    try {
+      await AsyncStorage.setItem('usuario', dados.usuario);
+      navigation.replace('principal-bottom-nav');
+    } catch (error) {
+      console.error('Erro ao salvar o ID do usuário:', error);
+    }
   }
-
-  //Isso vai automatizar o processo de apagar o id do usuario, ao clicar em algum lugar pra voltar pro login apaga automaticamente
-  useFocusEffect(
-    React.useCallback(() => {
-      // Função para remover o primeiro item do AsyncStorage
-      const removerPrimeiroItem = async () => {
-        try {
-          // Obter todos os itens do AsyncStorage
-          const todosItens = await AsyncStorage.getItem('usuario');
-          const listaDeItens = JSON.parse(todosItens) || [];
-
-          if (listaDeItens.length > 0) {
-            // Remover o primeiro item (índice 0)
-            listaDeItens.shift();
-
-            // Salvar a lista atualizada no AsyncStorage
-            await AsyncStorage.setItem('usuario', JSON.stringify(listaDeItens));
-
-            console.log('Primeiro item removido com sucesso.');
-          } else {
-            console.log('Não há itens para remover.');
-          }
-        } catch (error) {
-          console.error('Erro ao remover o primeiro item:', error);
-        }
-      }
-      removerPrimeiroItem()
-    }, [])
-  )
-
 
   return (
     <>
@@ -70,7 +35,7 @@ const Login = ({ navigation, route }) => {
         <Image style={styles.img} source={require('../imagens/logo.png')} />
 
         <Formik style={styles.input}
-          initialValues={usuario}
+          initialValues={{usuario: usuario}}
           validationSchema={ValidatorLogin}
           onSubmit={values => salvar(values)}
         >
@@ -84,7 +49,7 @@ const Login = ({ navigation, route }) => {
                 onChangeText={handleChange('usuario')}
               />
               {(touched.usuario && errors.usuario) &&
-                <Text>
+                <Text style={{color: 'red'}}>
                   {errors.usuario}
                 </Text>
               }

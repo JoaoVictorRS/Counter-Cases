@@ -22,6 +22,7 @@ const StatsKills = () => {
   const [DisparosArmas, setDisparosArmas] = useState({})
   const [ArmaMaisDisparada, setArmaMaisDisparada] = useState({})
   const [DanoTotal, setDanoTotal] = useState({})
+  const [DisparosAcertosCalculado, setDisparosAcertosCalculado] = useState({})
 
   useEffect(() => {
 
@@ -34,6 +35,7 @@ const StatsKills = () => {
         setDeaths(estats[1].value)
         setDisparos(estats[47].value)
         setAcertos(estats[46].value)
+        setDisparosAcertosCalculado(estats[47].value - estats[46].value)
         setCalculoKD((estats[0].value / estats[1].value).toFixed(2))
         setTaxaHS(((estats[25].value / estats[0].value) * 100).toFixed(2))
         setTaxaAcerto(((estats[46].value / estats[47].value) * 100).toFixed(2))
@@ -130,7 +132,7 @@ const StatsKills = () => {
 
   //GRAFICO DE DISPAROS/ACERTOS
   const data_disparos_acertos = [
-    { x: "Disparos", y: Disparos },
+    { x: "Erros", y: DisparosAcertosCalculado },
     { x: "Acertos", y: Acertos }
   ]
 
@@ -266,21 +268,20 @@ const StatsKills = () => {
           </View>
 
           <View style={StatsKillsStyle.view_grafico}>
-              <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos/Disparos</Text>
-              <VictoryPie
-                data={data_disparos_acertos}
-                colorScale={['red', 'green']} // Escolha as cores para cada fatia do gráfico
-                labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`} // Exibe o valor de cada fatia
-                radius={100} // Define o raio do gráfico de pizza
-                innerRadius={50} // Define o raio interno do gráfico de pizza
-                width={300}
-                height={300}
-                style={{ labels: { fontSize: 14, fontWeight: 'bold' } }} // Estilo dos rótulos
-                labelRadius={120}
-              />
-              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '5%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Acertos
-              </Text>
+            <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold', marginBottom: '10%' }}>Acertos / Erros</Text>
+            <VictoryPie
+              data={data_disparos_acertos}
+              colorScale={['red', 'green']} // Escolha as cores para cada fatia do gráfico
+              labels={({ datum }) => `${datum.x}: ${formataNumero(datum.y)}`} // Exibe o valor de cada fatia
+              radius={100} // Define o raio do gráfico de pizza
+              innerRadius={50} // Define o raio interno do gráfico de pizza
+              width={300}
+              height={300}
+              style={{ labels: { fontSize: 14, fontWeight: 'bold' } }} // Estilo dos rótulos
+              labelRadius={120}
+            />
+              <Text style={{ fontSize: 25 }}><Text style={{ fontWeight: 'bold' }}>{formataNumero(JSON.stringify(Disparos))}</Text> Disparos</Text>
+              <Text style={{ fontSize: 20, marginTop: '5%' }}><Text style={{ fontWeight: 'bold' }}>{removerAspas(JSON.stringify(TaxaAcerto))}%</Text> de Precisão</Text>
           </View>
 
           <View style={StatsKillsStyle.view_imagem_final_tela}>

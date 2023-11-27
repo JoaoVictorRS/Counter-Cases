@@ -47,7 +47,7 @@ const StatsPartidasStyle = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: '10%',
-        marginBottom: '10%'
+        marginBottom: '40%'
     },
     grafico_rounds_vitorias: {
         width: 300,

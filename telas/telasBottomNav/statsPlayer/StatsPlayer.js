@@ -157,8 +157,6 @@ const StatsPlayer = ({ navigation }) => {
     DE_SHORTTRAIN: require('../../../imagens/maps/De_train_cs2.webp')
   }
 
-  console.log(Estatisticas)
-
   return (
     <>
       <ScrollView>
@@ -254,7 +252,7 @@ const StatsPlayer = ({ navigation }) => {
 
           <View style={StatsPlayerStyle.view_vitorias_mvp}>
             <View style={StatsPlayerStyle.view_vitorias}>
-              <Text style={{ fontSize: 25 }}>Total de Vitorias</Text>
+              <Text style={{ fontSize: 25 }}>Rounds Ganhos</Text>
               <Text style={{ fontSize: 35 }}>{formataNumero(JSON.stringify(TotalVitorias))}</Text>
             </View>
 

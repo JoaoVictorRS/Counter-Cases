@@ -20,6 +20,8 @@ const StatsPartidas = ({ navigation }) => {
     const [TotalRounds, setTotalRounds] = useState({})
     const [ContributionScore, setContriburionScore] = useState({})
     const [VitoriaPorMapa, setVitoriaPorMapa] = useState([])
+    const [TotalRoundsCalculado, setTotalRoundsCalculado] = useState({})
+    const [TaxaVitorias, setTaxaVitorias] = useState({})
 
     useEffect(() => {
 
@@ -36,6 +38,8 @@ const StatsPartidas = ({ navigation }) => {
                 setPistolRound(estats[27].value)
                 setTotalRounds(estats[48].value)
                 setContriburionScore(estats[133].value)
+                setTotalRoundsCalculado(estats[48].value - estats[5].value)
+                setTaxaVitorias(((estats[5].value / estats[48].value) * 100).toFixed(2))
 
 
                 // Este bloco filtra os registros para apenas os 'total_wins_(nome do mapa)' sejam armazenados na constante
@@ -96,15 +100,13 @@ const StatsPartidas = ({ navigation }) => {
     //GRAFICO DE DISPAROS/ACERTOS
     const data_rounds_vitorias = [
         { x: "Vitorias", y: TotalVitorias },
-        { x: "Rounds", y: TotalRounds }
+        { x: "Derrotas", y: TotalRoundsCalculado }
     ]
 
     //GRAFICO DE VITORIAS POR MAPA
     const data_vitorias = VitoriaPorMapa
     // Ordenar os dados de total_wins de forma crescente
     data_vitorias.sort((a, b) => a.value - b.value);
-
-    console.log(Estatisticas)
 
     return (
         <>
@@ -113,7 +115,7 @@ const StatsPartidas = ({ navigation }) => {
 
                     <View style={StatsPartidasStyle.view_vitorias_mvp}>
                         <View style={StatsPartidasStyle.view_vitorias}>
-                            <Text style={{ fontSize: 25 }}>Total de Vitorias</Text>
+                            <Text style={{ fontSize: 25 }}>Rounds Ganhos</Text>
                             <Text style={{ fontSize: 35 }}>{formataNumero(JSON.stringify(TotalVitorias))}</Text>
                         </View>
 
@@ -179,7 +181,7 @@ const StatsPartidas = ({ navigation }) => {
                     </View>
 
                     <View style={StatsPartidasStyle.view_grafico}>
-                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Rounds / Vitorias</Text>
+                        <Text style={{ fontSize: 26, textAlign: 'center', fontWeight: 'bold' }}>Derrotas / Vitorias</Text>
                         <VictoryPie
                             data={data_rounds_vitorias}
                             colorScale={['green', 'red']} // Escolha as cores para cada fatia do gráfico
@@ -189,6 +191,8 @@ const StatsPartidas = ({ navigation }) => {
                             labelRadius={110}
                             style={{ labels: { fontSize: 14, fontWeight: 'bold' } }} // Estilo dos rótulos
                         />
+                        <Text style={{ fontSize: 25 }}><Text style={{ fontWeight: 'bold' }}>{formataNumero(JSON.stringify(TotalRounds))}</Text> Rounds</Text>
+                        <Text style={{ fontSize: 20, marginTop: '5%' }}><Text style={{ fontWeight: 'bold' }}>{removerAspas(JSON.stringify(TaxaVitorias))}%</Text> de vitorias</Text>
                     </View>
 
 
