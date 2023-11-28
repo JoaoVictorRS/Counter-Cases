@@ -7,9 +7,11 @@ import ValidatorLogin from './ValidatorLogin';
 import { useFocusEffect } from '@react-navigation/native';
 import { Image } from 'react-native';
 import Modal from 'react-native-modal';
+import SteamAPI from '../services/SteamAPI';
 
 const Login = ({ navigation, route }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [ModalLoginVisible, setModalLoginVisible] = useState(false)
   const [usuario, setUsuario] = useState('');
 
   useEffect(() => {
@@ -35,9 +37,25 @@ const Login = ({ navigation, route }) => {
         <Image style={styles.img} source={require('../imagens/logo.png')} />
 
         <Formik style={styles.input}
-          initialValues={{usuario: usuario}}
+          initialValues={{ usuario: usuario }}
           validationSchema={ValidatorLogin}
-          onSubmit={values => salvar(values)}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const response = await SteamAPI.get(`/GetPlayerSummaries?idUser=${values.usuario}`);
+              const playerData = response.data.response.players;
+
+              if (playerData.length === 0) {
+                // Se a resposta da API não retornar nenhum dado de usuário, exiba uma mensagem
+                setModalLoginVisible(true);
+                setSubmitting(false); // Defina setSubmitting para false para permitir tentativas posteriores
+              } else {
+                await AsyncStorage.setItem('usuario', values.usuario);
+                navigation.replace('principal-bottom-nav');
+              }
+            } catch (error) {
+              console.error('Erro ao buscar dados do usuário:', error);
+            }
+          }}
         >
           {({ handleChange, handleBlur, values, handleSubmit, errors, touched }) => (
             <View>
@@ -49,7 +67,7 @@ const Login = ({ navigation, route }) => {
                 onChangeText={handleChange('usuario')}
               />
               {(touched.usuario && errors.usuario) &&
-                <Text style={{color: 'red'}}>
+                <Text style={{ color: 'red' }}>
                   {errors.usuario}
                 </Text>
               }
@@ -73,6 +91,16 @@ const Login = ({ navigation, route }) => {
             </Button>
           </View>
         </Modal>
+
+        <Modal isVisible={ModalLoginVisible}>
+          <View style={styles.modalContainer}>
+            <Text style={{ textAlign: 'center' }}>ID steam invalido, insira um ID valido!</Text>
+            <Button style={styles.botao_modal} mode='outlined' onPress={() => setModalLoginVisible(false)}>
+              <Text style={styles.btt}>Fechar</Text>
+            </Button>
+          </View>
+        </Modal>
+        
       </View>
     </>
   )
